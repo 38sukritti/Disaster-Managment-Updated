@@ -1,522 +1,740 @@
 <!DOCTYPE html>
-<html lang="en-IN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>India Emergency Evacuation Routes</title>
+    <title>Evacuation Routes | Disaster Relief Network</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
     <style>
         :root {
-            --saffron: #FF9933;
-            --green: #138808;
-            --blue: #000080;
-            --danger: #DC2626;
-            --light-bg: #F8FAFC;
-            --text-dark: #1E293B;
+            --primary: #2c3e50;
+            --secondary: #e74c3c;
+            --accent: #3498db;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #27ae60;
+            --warning: #f39c12;
         }
-
+        
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', 'Noto Sans Devanagari', sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-
+        
         body {
-            background-color: var(--light-bg);
-            color: var(--text-dark);
+            background-color: #f5f7fa;
+            color: var(--dark);
             line-height: 1.6;
         }
-
-        /* Header with Indian theme */
+        
         header {
-            background: linear-gradient(135deg, var(--blue), var(--saffron));
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
             color: white;
-            padding: 2rem 1rem;
+            padding: 30px 0;
             text-align: center;
-            position: relative;
-            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
         }
-
-        header::after {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 10px;
-            background: var(--green);
+        
+        .emergency-alert {
+            background-color: var(--secondary);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            animation: pulse 2s infinite;
         }
-
-        .header-content h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
+        
+        @keyframes pulse {
+            0% { opacity: 0.9; }
+            50% { opacity: 1; }
+            100% { opacity: 0.9; }
         }
-
-        /* Main container */
+        
         .container {
             max-width: 1200px;
-            margin: 2rem auto;
-            padding: 0 1.5rem;
+            margin: 0 auto;
+            padding: 30px 20px;
         }
-
-        /* Map placeholder */
-        .map-placeholder {
-            height: 500px;
-            background: linear-gradient(145deg, #E2E8F0, #CBD5E1);
-            border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: var(--blue);
-            margin-bottom: 2rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            position: relative;
-            overflow: hidden;
+        
+        .map-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
         }
-
-        .map-placeholder i {
-            font-size: 4rem;
-            margin-bottom: 1rem;
-            color: var(--saffron);
+        
+        @media (max-width: 768px) {
+            .map-controls {
+                grid-template-columns: 1fr;
+            }
         }
-
-        .map-placeholder::before {
-            content: "Interactive Map Will Appear Here";
-            font-size: 1.5rem;
+        
+        .search-box {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        .resource-finder {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+        }
+        
+        h2 {
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 8px;
             font-weight: 600;
         }
-
-        /* Route options */
-        .route-options {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 3rem;
+        
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
         }
-
-        .option-card {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            transition: all 0.3s ease;
-            border: 2px solid transparent;
-            cursor: pointer;
-        }
-
-        .option-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px rgba(0,0,0,0.1);
-            border-color: var(--saffron);
-        }
-
-        .option-card i {
-            font-size: 2.5rem;
-            color: var(--blue);
-            margin-bottom: 1rem;
-        }
-
+        
         .btn {
             display: inline-block;
-            padding: 0.75rem 1.5rem;
-            background: var(--blue);
+            background: var(--accent);
             color: white;
+            padding: 12px 25px;
             border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+        }
+        
+        .btn-warning {
+            background: var(--warning);
+        }
+        
+        .btn-warning:hover {
+            background: #e67e22;
+        }
+        
+        #map-container {
+            height: 500px;
             border-radius: 8px;
-            font-weight: 600;
-            margin-top: 1rem;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            position: relative;
+        }
+        
+        #map {
+            height: 100%;
+            width: 100%;
+        }
+        
+        .map-overlay {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 1000;
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .map-overlay button {
+            display: block;
+            width: 100%;
+            margin-bottom: 5px;
+            padding: 8px 12px;
+            background: var(--light);
+            border: none;
+            border-radius: 3px;
             cursor: pointer;
             transition: all 0.3s ease;
         }
-
-        .btn:hover {
-            background: var(--saffron);
-            transform: translateY(-2px);
+        
+        .map-overlay button:hover {
+            background: var(--accent);
+            color: white;
         }
-
-        /* Emergency resources */
-        .emergency-resources {
+        
+        .map-overlay button.active {
+            background: var(--accent);
+            color: white;
+        }
+        
+        .shelter-list {
             background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            margin-bottom: 3rem;
-        }
-
-        .emergency-resources h2 {
-            color: var(--blue);
-            margin-bottom: 1.5rem;
-            text-align: center;
-            position: relative;
-        }
-
-        .emergency-resources h2::after {
-            content: "";
-            position: absolute;
-            bottom: -8px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background: var(--saffron);
-            border-radius: 2px;
-        }
-
-        .resource-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .resource-item {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            padding: 1rem;
-            background: var(--light-bg);
             border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 30px;
+        }
+        
+        .shelter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .shelter-card {
+            border: 1px solid #eee;
+            border-radius: 5px;
+            padding: 15px;
             transition: all 0.3s ease;
         }
-
-        .resource-item:hover {
-            background: #E2E8F0;
+        
+        .shelter-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
-
-        .resource-item i {
-            font-size: 1.5rem;
-            color: var(--danger);
+        
+        .shelter-name {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--primary);
         }
-
-        /* Emergency numbers */
-        .emergency-numbers {
-            background: var(--danger);
-            color: white;
-            padding: 2rem;
-            border-radius: 12px;
-            text-align: center;
+        
+        .shelter-address {
+            color: #666;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
         }
-
-        .emergency-numbers h2 {
-            margin-bottom: 1.5rem;
+        
+        .shelter-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
         }
-
-        .numbers-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            max-width: 800px;
-            margin: 0 auto;
+        
+        .shelter-distance {
+            color: var(--accent);
+            font-weight: bold;
         }
-
-        .number-item {
-            background: rgba(255,255,255,0.1);
-            padding: 1rem;
+        
+        .shelter-capacity {
+            color: var(--success);
+        }
+        
+        .emergency-resources {
+            background: white;
             border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
         }
-                
-        /* New Footer Styles */
+        
+        .resource-tabs {
+            display: flex;
+            border-bottom: 2px solid #eee;
+            margin-bottom: 20px;
+        }
+        
+        .resource-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            font-weight: bold;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+        
+        .resource-tab.active {
+            border-bottom: 3px solid var(--accent);
+            color: var(--accent);
+        }
+        
+        .resource-content {
+            display: none;
+        }
+        
+        .resource-content.active {
+            display: block;
+        }
+        
+        .resource-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .resource-item:last-child {
+            border-bottom: none;
+        }
+        
+        .resource-info h4 {
+            margin-bottom: 5px;
+            color: var(--primary);
+        }
+        
+        .resource-info p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .resource-action .btn {
+            padding: 8px 15px;
+            font-size: 0.9rem;
+        }
+        
         footer {
-            background: var(--blue);
+            background: var(--dark);
             color: white;
-            padding: 3rem 1rem;
-            margin-top: 3rem;
+            text-align: center;
+            padding: 30px;
+            margin-top: 50px;
         }
-
-        .footer-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 2rem;
+        
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
         }
-
-        .footer-logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            color: white;
-        }
-
-        .footer-logo span {
-            color: var(--saffron);
-        }
-
-        .footer-about p {
-            margin-bottom: 1rem;
-            opacity: 0.9;
-        }
-
-        .footer-links h3, 
-        .footer-contact h3 {
-            color: var(--saffron);
-            margin-bottom: 1.5rem;
-            position: relative;
-            padding-bottom: 0.5rem;
-        }
-
-        .footer-links h3::after,
-        .footer-contact h3::after {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 50px;
-            height: 3px;
-            background: var(--green);
-        }
-
-        .footer-links ul {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 0.8rem;
-        }
-
+        
         .footer-links a {
             color: white;
             text-decoration: none;
-            transition: all 0.3s ease;
-            display: block;
-            padding: 0.3rem 0;
         }
-
+        
         .footer-links a:hover {
-            color: var(--saffron);
-            transform: translateX(5px);
+            text-decoration: underline;
         }
-
-        .footer-contact p {
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: flex-start;
-            gap: 0.8rem;
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
         }
-
-        .footer-contact i {
-            color: var(--saffron);
-            margin-top: 0.2rem;
-        }
-
-        .footer-social {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1.5rem;
-        }
-
-        .footer-social a {
-            color: white;
-            background: rgba(255,255,255,0.1);
+        
+        .loading-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid var(--accent);
             width: 40px;
             height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
         }
-
-        .footer-social a:hover {
-            background: var(--saffron);
-            transform: translateY(-3px);
-        }
-
-        .footer-bottom {
-            text-align: center;
-            padding-top: 2rem;
-            margin-top: 2rem;
-            border-top: 1px solid rgba(255,255,255,0.1);
-            opacity: 0.8;
-            font-size: 0.9rem;
-        }
-
-        /* Responsive Footer */
-        @media (max-width: 768px) {
-            .footer-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .footer-links h3,
-            .footer-contact h3 {
-                margin-top: 1.5rem;
-            }
-        }
-
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .header-content h1 {
-                font-size: 2rem;
-            }
-            
-            .map-placeholder {
-                height: 400px;
-            }
-            
-            .map-placeholder::before {
-                font-size: 1.2rem;
-            }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
     <header>
-        <div class="header-content">
-            <h1>भारत आपातकालीन निकासी मार्ग</h1>
-            <p>Know your evacuation routes for emergencies in India</p>
+        <div class="container">
+            <h1><i class="fas fa-map-marked-alt"></i> Evacuation Routes & Emergency Maps</h1>
+            <p>Find safe routes and critical resources during emergencies</p>
         </div>
     </header>
-
-    <main class="container">
-        <div class="map-placeholder">
-            <i class="fas fa-map-marked-alt"></i>
-        </div>
-
-        <div class="route-options">
-            <div class="option-card">
-                <i class="fas fa-home"></i>
-                <h3>From Home</h3>
-                <button class="btn">View Routes</button>
+    
+    <div class="emergency-alert">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span id="emergency-message">Current Alert: No active emergency alerts in your area</span>
+    </div>
+    
+    <div class="container">
+        <div class="map-controls">
+            <div class="search-box">
+                <h2>Find Safe Routes</h2>
+                <div class="form-group">
+                    <label for="current-location">Your Location</label>
+                    <input type="text" id="current-location" placeholder="Enter address or use current location">
+                </div>
+                <div class="form-group">
+                    <label for="destination">Destination</label>
+                    <select id="destination">
+                        <option value="">Select destination type</option>
+                        <option value="shelter">Emergency Shelter</option>
+                        <option value="hospital">Hospital</option>
+                        <option value="fire">Fire Station</option>
+                        <option value="police">Police Station</option>
+                        <option value="custom">Custom Location</option>
+                    </select>
+                </div>
+                <div class="form-group" id="custom-location-group" style="display: none;">
+                    <label for="custom-location">Custom Location</label>
+                    <input type="text" id="custom-location" placeholder="Enter specific address">
+                </div>
+                <button class="btn" id="find-route-btn">Find Safest Route</button>
+                <button class="btn btn-warning" id="emergency-btn"><i class="fas fa-phone-alt"></i> Call Emergency Services</button>
             </div>
             
-            <div class="option-card">
-                <i class="fas fa-briefcase"></i>
-                <h3>From Work</h3>
-                <button class="btn">View Routes</button>
-            </div>
-            
-            <div class="option-card">
-                <i class="fas fa-map-marker-alt"></i>
-                <h3>Custom Location</h3>
-                <button class="btn">Set Location</button>
-            </div>
-        </div>
-
-        <div class="emergency-resources">
-            <h2>Emergency Resources Near You</h2>
-            <div class="resource-grid">
-                <div class="resource-item">
-                    <i class="fas fa-hospital"></i>
-                    <div>
-                        <h4>Nearest Hospital</h4>
-                        <p>2.3 km away</p>
-                    </div>
+            <div class="resource-finder">
+                <h2>Emergency Resources</h2>
+                <div class="form-group">
+                    <label for="resource-type">I need...</label>
+                    <select id="resource-type">
+                        <option value="medical">Medical Assistance</option>
+                        <option value="rescue">Rescue Services</option>
+                        <option value="food">Food & Water</option>
+                        <option value="shelter">Temporary Shelter</option>
+                        <option value="transport">Emergency Transport</option>
+                    </select>
                 </div>
-                <div class="resource-item">
-                    <i class="fas fa-hotel"></i>
-                    <div>
-                        <h4>NDMA Shelter</h4>
-                        <p>1.1 km away</p>
-                    </div>
+                <div class="form-group">
+                    <label for="resource-location">Near</label>
+                    <input type="text" id="resource-location" placeholder="Enter location">
                 </div>
-                <div class="resource-item">
-                    <i class="fas fa-gas-pump"></i>
-                    <div>
-                        <h4>Petrol Pump</h4>
-                        <p>0.7 km away</p>
-                    </div>
-                </div>
-                <div class="resource-item">
-                    <i class="fas fa-ambulance"></i>
-                    <div>
-                        <h4>Ambulance Service</h4>
-                        <p>Call 108</p>
-                    </div>
-                </div>
+                <button class="btn" id="find-resources-btn">Find Resources</button>
             </div>
         </div>
-
-        <div class="emergency-numbers">
-            <h2>Important Indian Emergency Numbers</h2>
-            <div class="numbers-grid">
-                <div class="number-item">
-                    <i class="fas fa-police-box"></i>
-                    <h3>Police</h3>
-                    <p>100</p>
-                </div>
-                <div class="number-item">
-                    <i class="fas fa-ambulance"></i>
-                    <h3>Ambulance</h3>
-                    <p>108</p>
-                </div>
-                <div class="number-item">
-                    <i class="fas fa-fire-extinguisher"></i>
-                    <h3>Fire Brigade</h3>
-                    <p>101</p>
-                </div>
-                <div class="number-item">
-                    <i class="fas fa-female"></i>
-                    <h3>Women's Helpline</h3>
-                    <p>1091</p>
-                </div>
+        
+        <div id="map-container">
+            <div id="map"></div>
+            <div class="map-overlay">
+                <button id="show-shelters">Shelters</button>
+                <button id="show-hospitals">Hospitals</button>
+                <button id="show-fire">Fire Stations</button>
+                <button id="show-police">Police</button>
+                <button id="show-all">Show All</button>
             </div>
         </div>
-    </main>
-
-    <footer>
-        <div class="footer-container">
-            <div class="footer-about">
-                <div class="footer-logo">India<span>Emergency</span></div>
-                <p>Providing critical evacuation information and emergency preparedness resources for citizens across India.</p>
-                <p>An initiative to make India more resilient to disasters.</p>
-            </div>
-            
-            <div class="footer-links">
-                <h3>Quick Links</h3>
-                <ul>
-                    <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
-                    <li><a href="about.html"><i class="fas fa-info-circle"></i> About Us</a></li>
-                    <li><a href="resources.html"><i class="fas fa-book"></i> Resources</a></li>
-                    <li><a href="contact.html"><i class="fas fa-phone-alt"></i> Contact</a></li>
-                    <li><a href="faq.html"><i class="fas fa-question-circle"></i> FAQ</a></li>
-                </ul>
-            </div>
-            
-            <div class="footer-contact">
-                <h3>Contact Us</h3>
-                <p>
-                    <i class="fas fa-map-marker-alt"></i>
-                    <span>National Emergency Response Centre, NDMA Bhawan, New Delhi - 110002</span>
-                </p>
-                <p>
-                    <i class="fas fa-phone-alt"></i>
-                    <span>Helpline: 1078 (Toll Free)</span>
-                </p>
-                <p>
-                    <i class="fas fa-envelope"></i>
-                    <span>info@indiaemergency.gov.in</span>
-                </p>
-                
-                <div class="footer-social">
-                    <a href="#"><i class="fab fa-twitter"></i></a>
-                    <a href="#"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-youtube"></i></a>
+        
+        <div class="loading" id="loading-indicator">
+            <div class="loading-spinner"></div>
+            <p>Finding safest routes and resources...</p>
+        </div>
+        
+        <div class="shelter-list" id="shelter-results">
+            <h2>Nearest Emergency Shelters</h2>
+            <div class="shelter-grid" id="shelter-grid">
+                <!-- Shelter cards will be populated by JavaScript -->
+                <div class="shelter-card">
+                    <div class="shelter-name">Central Community Shelter</div>
+                    <div class="shelter-address">123 Main St, Cityville</div>
+                    <div class="shelter-meta">
+                        <span class="shelter-distance">1.2 miles away</span>
+                        <span class="shelter-capacity">Capacity: 120/150</span>
+                    </div>
+                </div>
+                <div class="shelter-card">
+                    <div class="shelter-name">Northside High School</div>
+                    <div class="shelter-address">456 Oak Ave, Cityville</div>
+                    <div class="shelter-meta">
+                        <span class="shelter-distance">2.5 miles away</span>
+                        <span class="shelter-capacity">Capacity: 85/200</span>
+                    </div>
+                </div>
+                <div class="shelter-card">
+                    <div class="shelter-name">Westside Community Center</div>
+                    <div class="shelter-address">789 Pine Rd, Cityville</div>
+                    <div class="shelter-meta">
+                        <span class="shelter-distance">3.1 miles away</span>
+                        <span class="shelter-capacity">Capacity: 45/100</span>
+                    </div>
                 </div>
             </div>
         </div>
         
-        <div class="footer-bottom">
-            <p>&copy; 2025 National Disaster Management Authority, Government of India. All rights reserved.</p>
-            <p>
-                <a href="privacy.html" style="color: var(--saffron);">Privacy Policy</a> | 
-                <a href="terms.html" style="color: var(--saffron);">Terms of Service</a> | 
-                <a href="sitemap.html" style="color: var(--saffron);">Sitemap</a>
-            </p>
+        <div class="emergency-resources" id="resource-results">
+            <h2>Emergency Resources Nearby</h2>
+            <div class="resource-tabs">
+                <div class="resource-tab active" data-tab="medical">Medical</div>
+                <div class="resource-tab" data-tab="rescue">Rescue</div>
+                <div class="resource-tab" data-tab="food">Food & Water</div>
+                <div class="resource-tab" data-tab="shelter">Shelter</div>
+            </div>
+            
+            <div class="resource-content active" id="medical-content">
+                <div class="resource-item">
+                    <div class="resource-info">
+                        <h4>City General Hospital</h4>
+                        <p>24/7 Emergency Services | 1.5 miles away</p>
+                    </div>
+                    <div class="resource-action">
+                        <button class="btn">Get Directions</button>
+                    </div>
+                </div>
+                <div class="resource-item">
+                    <div class="resource-info">
+                        <h4>Urgent Care Center</h4>
+                        <p>Open until 10pm | 0.8 miles away</p>
+                    </div>
+                    <div class="resource-action">
+                        <button class="btn">Get Directions</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="resource-content" id="rescue-content">
+                <div class="resource-item">
+                    <div class="resource-info">
+                        <h4>Fire Station #12</h4>
+                        <p>24/7 Emergency Response | 1.2 miles away</p>
+                    </div>
+                    <div class="resource-action">
+                        <button class="btn">Get Directions</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="resource-content" id="food-content">
+                <div class="resource-item">
+                    <div class="resource-info">
+                        <h4>Red Cross Food Distribution</h4>
+                        <p>Daily meals available | 2.1 miles away</p>
+                    </div>
+                    <div class="resource-action">
+                        <button class="btn">Get Directions</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="resource-content" id="shelter-content">
+                <div class="resource-item">
+                    <div class="resource-info">
+                        <h4>Central Community Shelter</h4>
+                        <p>Open 24/7 during emergencies | 1.2 miles away</p>
+                    </div>
+                    <div class="resource-action">
+                        <button class="btn">Get Directions</button>
+                    </div>
+                </div>
+            </div>
         </div>
+    </div>
+    
+    <footer>
+        <div class="footer-links">
+            <a href="#">Home</a>
+            <a href="#">Donations</a>
+            <a href="#">Missing Persons</a>
+            <a href="#">Emergency Contacts</a>
+            <a href="#">About Us</a>
+        </div>
+        <p>Disaster Relief Network &copy; 2023 | All Rights Reserved</p>
+        <p>For emergency assistance, please call your local emergency number</p>
     </footer>
 
+    <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
     <script>
-        // This would be replaced with actual map implementation
-        document.querySelectorAll('.option-card').forEach(card => {
-            card.addEventListener('click', function() {
-                const locationType = this.querySelector('h3').textContent;
-                alert(`Showing evacuation routes ${locationType}\n\n(In a real implementation, this would display the interactive map with routes)`);
+        // Initialize the map
+        const map = L.map('map').setView([51.505, -0.09], 13);
+        
+        // Add OpenStreetMap tiles
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+        
+        // Sample markers for demonstration
+        const shelters = [
+            { name: "Central Community Shelter", lat: 51.505, lng: -0.09, capacity: "120/150" },
+            { name: "Northside High School", lat: 51.51, lng: -0.1, capacity: "85/200" },
+            { name: "Westside Community Center", lat: 51.515, lng: -0.1, capacity: "45/100" }
+        ];
+        
+        const hospitals = [
+            { name: "City General Hospital", lat: 51.5, lng: -0.085 },
+            { name: "Urgent Care Center", lat: 51.495, lng: -0.095 }
+        ];
+        
+        const fireStations = [
+            { name: "Fire Station #12", lat: 51.51, lng: -0.08 }
+        ];
+        
+        const policeStations = [
+            { name: "Central Police Station", lat: 51.495, lng: -0.1 }
+        ];
+        
+        // Create layer groups
+        const shelterLayer = L.layerGroup();
+        const hospitalLayer = L.layerGroup();
+        const fireLayer = L.layerGroup();
+        const policeLayer = L.layerGroup();
+        
+        // Add markers to layers
+        shelters.forEach(shelter => {
+            const marker = L.marker([shelter.lat, shelter.lng])
+                .bindPopup(`<b>${shelter.name}</b><br>Capacity: ${shelter.capacity}`);
+            shelterLayer.addLayer(marker);
+        });
+        
+        hospitals.forEach(hospital => {
+            const marker = L.marker([hospital.lat, hospital.lng], { icon: createIcon('hospital') })
+                .bindPopup(`<b>${hospital.name}</b><br>24/7 Emergency Services`);
+            hospitalLayer.addLayer(marker);
+        });
+        
+        fireStations.forEach(station => {
+            const marker = L.marker([station.lat, station.lng], { icon: createIcon('fire') })
+                .bindPopup(`<b>${station.name}</b><br>Emergency Response`);
+            fireLayer.addLayer(marker);
+        });
+        
+        policeStations.forEach(station => {
+            const marker = L.marker([station.lat, station.lng], { icon: createIcon('police') })
+                .bindPopup(`<b>${station.name}</b><br>Police Services`);
+            policeLayer.addLayer(marker);
+        });
+        
+        // Custom icon function
+        function createIcon(type) {
+            let iconUrl, iconSize;
+            
+            switch(type) {
+                case 'hospital':
+                    iconUrl = 'https://cdn-icons-png.flaticon.com/512/2909/2909493.png';
+                    iconSize = [30, 30];
+                    break;
+                case 'fire':
+                    iconUrl = 'https://cdn-icons-png.flaticon.com/512/599/599502.png';
+                    iconSize = [25, 25];
+                    break;
+                case 'police':
+                    iconUrl = 'https://cdn-icons-png.flaticon.com/512/2534/2534400.png';
+                    iconSize = [25, 25];
+                    break;
+                default:
+                    iconUrl = 'https://cdn-icons-png.flaticon.com/512/447/447031.png';
+                    iconSize = [25, 25];
+            }
+            
+            return L.icon({
+                iconUrl: iconUrl,
+                iconSize: iconSize,
+                iconAnchor: [iconSize[0]/2, iconSize[1]/2],
+                popupAnchor: [0, -iconSize[1]/2]
+            });
+        }
+        
+        // Map overlay controls
+        document.getElementById('show-shelters').addEventListener('click', function() {
+            this.classList.toggle('active');
+            if (this.classList.contains('active')) {
+                shelterLayer.addTo(map);
+            } else {
+                map.removeLayer(shelterLayer);
+            }
+        });
+        
+        document.getElementById('show-hospitals').addEventListener('click', function() {
+            this.classList.toggle('active');
+            if (this.classList.contains('active')) {
+                hospitalLayer.addTo(map);
+            } else {
+                map.removeLayer(hospitalLayer);
+            }
+        });
+        
+        document.getElementById('show-fire').addEventListener('click', function() {
+            this.classList.toggle('active');
+            if (this.classList.contains('active')) {
+                fireLayer.addTo(map);
+            } else {
+                map.removeLayer(fireLayer);
+            }
+        });
+        
+        document.getElementById('show-police').addEventListener('click', function() {
+            this.classList.toggle('active');
+            if (this.classList.contains('active')) {
+                policeLayer.addTo(map);
+            } else {
+                map.removeLayer(policeLayer);
+            }
+        });
+        
+        document.getElementById('show-all').addEventListener('click', function() {
+            shelterLayer.addTo(map);
+            hospitalLayer.addTo(map);
+            fireLayer.addTo(map);
+            policeLayer.addTo(map);
+            
+            document.querySelectorAll('.map-overlay button').forEach(btn => {
+                btn.classList.add('active');
             });
         });
+        
+        // Destination type change
+        document.getElementById('destination').addEventListener('change', function() {
+            const customLocationGroup = document.getElementById('custom-location-group');
+            if (this.value === 'custom') {
+                customLocationGroup.style.display = 'block';
+            } else {
+                customLocationGroup.style.display = 'none';
+            }
+        });
+        
+        // Find route button
+        document.getElementById('find-route-btn').addEventListener('click', function() {
+            const loading = document.getElementById('loading-indicator');
+            loading.style.display = 'block';
+            
+            // Simulate API call
+            setTimeout(() => {
+                loading.style.display = 'none';
+                
+                // In a real app, you would draw the route on the map here
+                alert('Route calculation would appear here. In a real app, this would connect to a routing API.');
+            }, 2000);
+        });
+        
+        // Emergency button
+        document.getElementById('emergency-btn').addEventListener('click', function() {
+            if (confirm('Are you sure you want to call emergency services?')) {
+                // In a real app, this would initiate a phone call
+                alert('In a real app, this would call emergency services.');
+            }
+        });
+        
+        // Resource tabs
+        document.querySelectorAll('.resource-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                const tabId = this.getAttribute('data-tab');
+                
+                // Remove active class from all tabs and contents
+                document.querySelectorAll('.resource-tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.resource-content').forEach(c => c.classList.remove('active'));
+                
+                // Add active class to clicked tab and corresponding content
+                this.classList.add('active');
+                document.getElementById(`${tabId}-content`).classList.add('active');
+            });
+        });
+        
+        // Find resources button
+        document.getElementById('find-resources-btn').addEventListener('click', function() {
+            const loading = document.getElementById('loading-indicator');
+            loading.style.display = 'block';
+            
+            // Simulate API call
+            setTimeout(() => {
+                loading.style.display = 'none';
+                alert('Resources would be displayed here. In a real app, this would fetch real data.');
+            }, 1500);
+        });
+        
+        // Geolocation button would be implemented here
+        // In a real app, you would use navigator.geolocation.getCurrentPosition()
     </script>
 </body>
 </html>

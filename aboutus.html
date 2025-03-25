@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | Disaster Relief Network</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2c3e50;
+            --secondary: #e74c3c;
+            --accent: #3498db;
+            --light: #ecf0f1;
+            --dark: #2c3e50;
+            --success: #27ae60;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f5f7fa;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+            color: white;
+            padding: 30px 0;
+            text-align: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        .mission-section {
+            background: white;
+            border-radius: 10px;
+            padding: 40px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            margin-bottom: 40px;
+            text-align: center;
+        }
+        
+        .mission-section h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 2rem;
+        }
+        
+        .mission-section p {
+            max-width: 800px;
+            margin: 0 auto 30px;
+            font-size: 1.1rem;
+        }
+        
+        .team-section h2 {
+            text-align: center;
+            color: var(--primary);
+            margin-bottom: 40px;
+            font-size: 2rem;
+        }
+        
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 50px;
+        }
+        
+        .team-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+            text-align: center;
+        }
+        
+        .team-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .team-image {
+            height: 250px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+        
+        .team-image::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to top, rgba(0,0,0,0.7), transparent);
+        }
+        
+        .team-info {
+            padding: 25px;
+            position: relative;
+        }
+        
+        .team-name {
+            font-size: 1.4rem;
+            margin-bottom: 5px;
+            color: var(--primary);
+        }
+        
+        .team-role {
+            color: var(--accent);
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+        
+        .team-bio {
+            margin-bottom: 20px;
+            color: #666;
+        }
+        
+        .team-social {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+        }
+        
+        .team-social a {
+            color: var(--primary);
+            font-size: 1.2rem;
+            transition: color 0.3s ease;
+        }
+        
+        .team-social a:hover {
+            color: var(--accent);
+        }
+        
+        .stats-section {
+            background: var(--primary);
+            color: white;
+            padding: 60px 20px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .stats-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .stats-section h2 {
+            font-size: 2rem;
+            margin-bottom: 40px;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--accent);
+        }
+        
+        .partners-section {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+        
+        .partners-section h2 {
+            color: var(--primary);
+            margin-bottom: 30px;
+            font-size: 2rem;
+        }
+        
+        .partners-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 30px;
+            align-items: center;
+        }
+        
+        .partner-logo {
+            max-width: 150px;
+            height: auto;
+            filter: grayscale(100%);
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+        
+        .partner-logo:hover {
+            filter: grayscale(0);
+            opacity: 1;
+        }
+        
+        footer {
+            background: var(--dark);
+            color: white;
+            text-align: center;
+            padding: 30px;
+            font-size: 0.9rem;
+        }
+        
+        .contact-btn {
+            display: inline-block;
+            background: var(--accent);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 20px;
+            transition: all 0.3s ease;
+        }
+        
+        .contact-btn:hover {
+            background: #2980b9;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .team-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .mission-section {
+                padding: 30px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1><i class="fas fa-users"></i> About Our Team</h1>
+            <p>The passionate individuals behind Disaster Relief Network</p>
+        </div>
+    </header>
+    
+    <div class="container">
+        <section class="mission-section">
+            <h2>Our Mission</h2>
+            <p>We are a team of four dedicated developers committed to creating digital solutions that help communities prepare for, respond to, and recover from disasters. Our comprehensive platform combines emergency alerts, missing person tracking, donation management, and rescue coordination to save lives and rebuild communities.</p>
+            <a href="#contact" class="contact-btn">Get In Touch</a>
+        </section>
+        
+        <section class="team-section">
+            <h2>Meet The Team</h2>
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="team-image" style="background-image: url('https://files.oaiusercontent.com/file-BjatzD3RMNmVynQ1bRGDef?se=2025-03-25T18%3A32%3A11Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3De9a9e3c9-46e9-4f17-8e12-801a93f49846.webp&sig=t9ET2FSY5mp9yaUpSTehG9wYnczl2h0eXJ9qsKi5AKw%3D');"></div>
+                    <div class="team-info">
+                        <h3 class="team-name">Nayamat</h3>
+                        <div class="team-role">Team Leader</div>
+                        <p class="team-bio">Oversees project coordination and ensures all components work seamlessly together. Specializes in system architecture and emergency response protocols.</p>
+                        <div class="team-social">
+                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                            <a href="#"><i class="fab fa-github"></i></a>
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="team-card">
+                    <div class="team-image" style="background-image: url('https://files.oaiusercontent.com/file-EYs2AZrG5XJu1sV4MFSb9N?se=2025-03-25T18%3A27%3A58Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D607fcd83-b4f3-4d8b-92aa-fe7df3def7ed.webp&sig=iJ30aGLZdvw5gZ39UDYAwv9cCOPVdkeVxfXrjxNHOW0%3D');"></div>
+                    <div class="team-info">
+                        <h3 class="team-name">Namya</h3>
+                        <div class="team-role">UX/UI Designer</div>
+                        <p class="team-bio">Creates intuitive interfaces that work even in high-stress emergency situations. Focused on accessibility and user experience.</p>
+                        <div class="team-social">
+                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                            <a href="#"><i class="fab fa-dribbble"></i></a>
+                            <a href="#"><i class="fab fa-behance"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="team-card">
+                    <div class="team-image" style="background-image: url('https://files.oaiusercontent.com/file-QPvSHtGqGSeR4LhgW9gN8K?se=2025-03-25T18%3A29%3A35Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3D6aebd46d-4c69-4ad0-a64e-bcb51d2a53e0.webp&sig=MOyONeMxEqk0zTS3LXGD7Jz8gXZJ2O1yq461MWfeB9g%3D');"></div>
+                    <div class="team-info">
+                        <h3 class="team-name">Sukritti</h3>
+                        <div class="team-role">Backend Developer</div>
+                        <p class="team-bio">Builds the robust systems that power our emergency alerts and data management. Ensures reliability during critical situations.</p>
+                        <div class="team-social">
+                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                            <a href="#"><i class="fab fa-github"></i></a>
+                            <a href="#"><i class="fab fa-stack-overflow"></i></a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="team-card">
+                    <div class="team-image" style="background-image: url('https://files.oaiusercontent.com/file-WpQFn5CY8XMJkWxduuzfRX?se=2025-03-25T18%3A34%3A16Z&sp=r&sv=2024-08-04&sr=b&rscc=max-age%3D604800%2C%20immutable%2C%20private&rscd=attachment%3B%20filename%3Dc549ab9a-2722-40c1-8c31-a90355214c37.webp&sig=xOOO4LoYETMAocrdjOuoHxokFg4vkCsRi8d13LCFzp4%3D');"></div>
+                    <div class="team-info">
+                        <h3 class="team-name">Rishu</h3>
+                        <div class="team-role">Frontend Developer</div>
+                        <p class="team-bio">Implements the interactive features that make our platform easy to use in emergencies. Focused on performance and accessibility.</p>
+                        <div class="team-social">
+                            <a href="#"><i class="fab fa-linkedin"></i></a>
+                            <a href="#"><i class="fab fa-github"></i></a>
+                            <a href="#"><i class="fab fa-codepen"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="stats-section">
+            <div class="stats-container">
+                <h2>Our Impact</h2>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">10K+</div>
+                        <p>Lives Impacted</p>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">50+</div>
+                        <p>Communities Served</p>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">24/7</div>
+                        <p>Emergency Support</p>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">4</div>
+                        <p>Dedicated Team Members</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section class="partners-section">
+            <h2>Our Partners</h2>
+            <div class="partners-grid">
+                <img src="https://via.placeholder.com/150x80?text=Govt+Agency" alt="Government Partner" class="partner-logo">
+                <img src="https://via.placeholder.com/150x80?text=Red+Cross" alt="Red Cross" class="partner-logo">
+                <img src="https://via.placeholder.com/150x80?text=Tech+Partner" alt="Technology Partner" class="partner-logo">
+                <img src="https://via.placeholder.com/150x80?text=Local+NGO" alt="Local NGO" class="partner-logo">
+            </div>
+        </section>
+        
+        <section id="contact" class="mission-section">
+            <h2>Get Involved</h2>
+            <p>Whether you're a developer wanting to contribute, an organization looking to partner, or an individual seeking help, we'd love to hear from you. Together we can build more resilient communities.</p>
+            <a href="mailto:team@disasterreliefnetwork.com" class="contact-btn">Contact Our Team</a>
+        </section>
+    </div>
+    
+    <footer>
+        <p>Disaster Relief Network is a collaborative project developed to help communities in crisis.</p>
+        <p>© 2023 Disaster Relief Network. All rights reserved.</p>
+    </footer>
+
+    <script>
+        // Animation for team cards on scroll
+        document.addEventListener('DOMContentLoaded', function() {
+            const teamCards = document.querySelectorAll('.team-card');
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, { threshold: 0.1 });
+            
+            teamCards.forEach(card => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(20px)';
+                card.style.transition = 'all 0.5s ease';
+                observer.observe(card);
+            });
+            
+            // Animate stats counting
+            const statNumbers = document.querySelectorAll('.stat-number');
+            const statsSection = document.querySelector('.stats-section');
+            
+            const statsObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        statNumbers.forEach(stat => {
+                            const target = +stat.textContent.replace(/[^0-9]/g, '');
+                            const suffix = stat.textContent.replace(/[0-9]/g, '');
+                            const duration = 2000;
+                            const step = target / (duration / 16);
+                            let current = 0;
+                            
+                            const counter = setInterval(() => {
+                                current += step;
+                                if (current >= target) {
+                                    clearInterval(counter);
+                                    stat.textContent = target + suffix;
+                                } else {
+                                    stat.textContent = Math.floor(current) + suffix;
+                                }
+                            }, 16);
+                        });
+                        statsObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+            
+            statsObserver.observe(statsSection);
+        });
+    </script>
+</body>
+</html>
