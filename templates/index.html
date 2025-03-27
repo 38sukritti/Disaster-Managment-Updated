@@ -6,7 +6,10 @@
     <title>ResilienceHub - Disaster Preparedness & Response</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Roboto+Condensed:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
    <link rel="shortcut icon" href="./images/logo.jpeg" type="image/x-icon">
+   
 </head>
 <style>
   /* Base Styles */
@@ -190,6 +193,83 @@ img {
     color: var(--primary);
 }
 
+/* Navigation SOS Button */
+.sos-nav-button {
+    background-color: #dc2626;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.sos-nav-button:hover {
+    background-color: #b91c1c;
+    transform: translateY(-1px);
+}
+
+.sos-nav-button:active {
+    transform: translateY(0);
+}
+/* SOS Button Styles */
+#sosButton {
+    background-color: #dc2626;
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 12px 24px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 6px rgba(220, 38, 38, 0.3);
+}
+
+#sosButton:hover {
+    background-color: #b91c1c;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 8px rgba(220, 38, 38, 0.4);
+}
+
+#sosButton:active {
+    transform: translateY(0);
+}
+
+/* SOS Button States */
+.sos-active {
+    background-color: #f59e0b !important;
+    box-shadow: 0 4px 6px rgba(245, 158, 11, 0.3) !important;
+}
+
+.sos-success {
+    background-color: #10b981 !important;
+    box-shadow: 0 4px 6px rgba(16, 185, 129, 0.3) !important;
+}
+
+.sos-error {
+    background-color: #ef4444 !important;
+    box-shadow: 0 4px 6px rgba(239, 68, 68, 0.3) !important;
+}
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+    .sos-nav-button {
+        padding: 0.5rem;
+        font-size: 0;
+    }
+    
+    .sos-nav-button i {
+        font-size: 1rem;
+    }
+}
+
 .mobile-menu {
     display: none;
     font-size: 1.5rem;
@@ -221,19 +301,19 @@ img {
 @keyframes changeBackground {
     0%, 100% {
         background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
-                          url('./images/floood.jpeg');
+                          url('../static/images/floood.jpeg');
     }
     25% {
         background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
-                          url('./images/flood2.jpeg');
+                          url('../static/images/flood2.jpeg');
     }
     50% {
         background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
-                          url('./images/flood3.jpeg');
+                          url('../static/images/flood3.jpeg');
     }
     75% {
         background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
-                          url('./images/flood4.jpeg');
+                          url('../static/images/flood4.jpeg');
     }
 }
 
@@ -277,6 +357,74 @@ img {
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
+
+    #disasterMap {
+        height: 500px;
+        width: 100%;
+        border-radius: 8px;
+        z-index: 1;
+    }
+    
+    .map-container {
+        position: relative;
+        margin-bottom: 1rem;
+    }
+    
+    .map-controls {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        z-index: 1000;
+        display: flex;
+        gap: 5px;
+    }
+    
+    .control-btn {
+        padding: 6px 12px;
+        background: white;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        cursor: pointer;
+        font-size: 14px;
+        box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+    }
+    
+    .control-btn.active {
+        background: #2c3e50;
+        color: white;
+        border-color: #2c3e50;
+    }
+    
+    .map-legend {
+        position: absolute;
+        bottom: 20px;
+        right: 10px;
+        z-index: 1000;
+        background: white;
+        padding: 10px;
+        border-radius: 4px;
+        box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+    }
+    
+    .legend-item {
+        margin: 5px 0;
+        display: flex;
+        align-items: center;
+    }
+    
+    .legend-item .icon {
+        margin-right: 8px;
+        font-size: 18px;
+    }
+    
+    .refresh-btn {
+        margin-left: 10px;
+        background: #f8f9fa;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 2px 8px;
+        cursor: pointer;
+    }
 .map-container {
     position: relative;
     height: 400px;
@@ -288,7 +436,11 @@ img {
     background-color: #e8f4f8;
     position: relative;
 }
-
+#disasterMap {
+    height: 500px;  /* Absolute must-have */
+    width: 100%;
+    z-index: 1;  /* Ensures map appears above other elements */
+}
 .map-overlay {
     position: absolute;
     bottom: 20px;
@@ -839,30 +991,51 @@ img {
         right: -20px;
     }
 }
+
+.nav-username {
+    margin-right: 1rem;
+    color: var(--dark);
+    font-weight: 500;
+}
+
+.btn-outline {
+    background: transparent;
+    border: 2px solid var(--primary);
+    color: var(--primary);
+}
+
+.btn-outline:hover {
+    background: var(--primary);
+    color: white;
+}
 </style>
 <body>
-    <!-- Header/Navigation -->
-    <header class="header">
-        <div class="container">
-            <div class="logo">
-                <i class="fas fa-shield-alt"></i>
-                <span>सुरक्षासेतु</span>
-            </div>
-            <nav class="nav">
-                <ul>
-                    <li><a href="#">Home</a></li>
-                    <li><a href="./user.html">Alerts</a></li>
-                    <li><a href="./firstaid.html">Prepare</a></li>
-                    <li><a href="#">Respond</a></li>
-                    <li><a href="#">Recover</a></li>
-                    <li><a href="./aboutus.html">About</a></li>
-                </ul>
-            </nav>
-            <div class="mobile-menu">
-                <i class="fas fa-bars"></i>
-            </div>
+ <!-- Header/Navigation -->
+<header class="header">
+    <div class="container">
+        <div class="logo">
+            <i class="fas fa-shield-alt"></i>
+            <span>सुरक्षासेतु</span>
         </div>
-    </header>
+        <nav class="nav">
+            <ul>
+                <li><a href="{{url_for('home')}}">Home</a></li>
+                <li><a href="{{url_for('admin_login')}}">Send Alerts</a></li>
+                
+                <li><a href="{{url_for('about')}}">About</a></li>
+                <li><a href="{{url_for('register')}}">Register</a></li>
+                <li>
+                    <button id="navSosButton" class="sos-nav-button">
+                        <i class="fas fa-bell"></i> SOS
+                    </button>
+                </li>
+            </ul>
+        </nav>
+        <div class="mobile-menu">
+            <i class="fas fa-bars"></i>
+        </div>
+    </div>
+</header>
 
     <!-- Hero Section -->
     <section class="hero">
@@ -872,49 +1045,119 @@ img {
                 <h1>Empowering Resilience Through Preparedness & Action</h1>
                 <p>Real-time alerts, life-saving resources, and community support when you need it most</p>
                 <div class="hero-buttons">
-                    <a href="./user.html" class="btn btn-primary">Get Emergency Alerts</a>
-                    <a href="./contacts.html" class="btn btn-secondary">List of emergency contacts</a>
+                    <a href="{{url_for('user')}}" class="btn btn-primary">Get Emergency Alerts</a>
+                    <a href="{{url_for('contacts')}}" class="btn btn-secondary">List of emergency contacts</a>
                     <a href="#" class="btn btn-alert">Report a Disaster</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Live Threat Dashboard -->
-    <section class="dashboard">
-        <div class="container">
-            <h2>Live Global Threat Dashboard</h2>
-            <div class="dashboard-container">
-                <div class="map-container">
-                    <div class="map" id="disasterMap">
-                        <!-- Map will be rendered here with JavaScript -->
-                        <div class="map-overlay">
-                            <div class="map-legend">
-                                <div class="legend-item"><span class="icon earthquake"></span> Earthquake</div>
-                                <div class="legend-item"><span class="icon flood"></span> Flood</div>
-                                <div class="legend-item"><span class="icon wildfire"></span> Wildfire</div>
-                                <div class="legend-item"><span class="icon hurricane"></span> Hurricane</div>
-                            </div>
-                        </div>
-                    </div>
+<!-- Live Threat Dashboard with Interactive Map -->
+<section class="dashboard">
+    <div class="container">
+        <h2>Live Global Threat Dashboard</h2>
+        <div class="dashboard-container">
+            <!-- Interactive Map Container -->
+            <div class="map-container">
+                <div class="map-controls">
+                    <button class="control-btn active" data-layer="all">All Threats</button>
+                    <button class="control-btn" data-layer="earthquake">Earthquakes</button>
+                    <button class="control-btn" data-layer="flood">Floods</button>
+                    <button class="control-btn" data-layer="wildfire">Wildfires</button>
+                    <button class="control-btn" data-layer="hurricane">Hurricanes</button>
                 </div>
-                <div class="stats-ticker">
+                
+                <!-- Map Div (must have defined height) -->
+                <div class="map" id="disasterMap"></div>
+                
+                <!-- Map Overlay Elements -->
+                <div class="map-overlay">
+                    <div class="map-legend">
+                        <h4>Threat Legend</h4>
+                        <div class="legend-item"><span class="icon earthquake">🟠</span> Earthquake</div>
+                        <div class="legend-item"><span class="icon flood">🔵</span> Flood</div>
+                        <div class="legend-item"><span class="icon wildfire">🟡</span> Wildfire</div>
+                        <div class="legend-item"><span class="icon hurricane">🔴</span> Hurricane</div>
+                        <div class="legend-item"><span class="icon warning">⚠️</span> Early Warning</div>
+                    </div>
+                    <div class="map-tooltip" id="mapTooltip"></div>
+                </div>
+                
+                <!-- Map Initialization Script -->
+                <script>
+                    // Initialize map centered on India
+                    const map = L.map('disasterMap').setView([20.5937, 78.9629], 5);
+                    
+                    // Add OpenStreetMap base layer
+                    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                        maxZoom: 18
+                    }).addTo(map);
+                    
+                    // Sample markers for different threat types
+                    const earthquakeIcon = L.divIcon({ className: 'earthquake-icon', html: '🌋' });
+                    const floodIcon = L.divIcon({ className: 'flood-icon', html: '🌊' });
+                    const wildfireIcon = L.divIcon({ className: 'wildfire-icon', html: '🔥' });
+                    const hurricaneIcon = L.divIcon({ className: 'hurricane-icon', html: '🌀' });
+                    
+                    // Add sample markers
+                    L.marker([19.0760, 72.8777], { icon: earthquakeIcon }) // Mumbai
+                        .addTo(map)
+                        .bindPopup("<b>Earthquake Alert</b><br>Magnitude 4.5");
+                    
+                    L.marker([28.6139, 77.2090], { icon: floodIcon }) // Delhi
+                        .addTo(map)
+                        .bindPopup("<b>Flood Warning</b><br>Yamuna River overflow");
+                    
+                    L.marker([12.9716, 77.5946], { icon: wildfireIcon }) // Bengaluru
+                        .addTo(map)
+                        .bindPopup("<b>Wildfire Alert</b><br>Bandipur National Park");
+                    
+                    L.marker([13.0827, 80.2707], { icon: hurricaneIcon }) // Chennai
+                        .addTo(map)
+                        .bindPopup("<b>Cyclone Warning</b><br>Approaching from Bay of Bengal");
+                    
+                    // Layer control functionality
+                    document.querySelectorAll('.control-btn').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            document.querySelectorAll('.control-btn').forEach(b => b.classList.remove('active'));
+                            this.classList.add('active');
+                            // Here you would add actual layer filtering logic
+                            console.log('Showing layer:', this.dataset.layer);
+                        });
+                    });
+                    
+                    // Update last updated time
+                    document.getElementById('lastUpdated').textContent = new Date().toLocaleTimeString();
+                </script>
+            </div>
+            
+            <!-- Stats Ticker -->
+            <div class="stats-ticker">
+                <h3>Real-time Statistics</h3>
+                <div class="ticker-container">
                     <div class="ticker-item">
-                        <span class="number" id="activeDisasters">14</span>
+                        <span class="number" id="activeDisasters">4</span>
                         <span class="label">Active Disasters</span>
                     </div>
                     <div class="ticker-item">
                         <span class="number" id="peopleAssisted">3,452</span>
-                        <span class="label">People Assisted This Week</span>
+                        <span class="label">People Assisted Today</span>
                     </div>
                     <div class="ticker-item">
-                        <span class="number" id="preparednessDrills">78</span>
+                        <span class="number" id="preparednessDrills">12</span>
                         <span class="label">Preparedness Drills</span>
                     </div>
                 </div>
+                <div class="ticker-update">
+                    Last updated: <span id="lastUpdated">Just now</span>
+                    <button id="refreshBtn" class="refresh-btn">⟳ Refresh</button>
+                </div>
             </div>
         </div>
-    </section>
+    </div>
+</section>
 
     <!-- Preparedness Quick Access -->
     <section class="quick-access">
@@ -927,7 +1170,7 @@ img {
                     </div>
                     <h3>Build Your Emergency Kit</h3>
                     <p>Essential items checklist tailored to your location</p>
-                    <button class="btn-grid"><a href="./emergency.html">Get Checklist</a></button>
+                    <button class="btn-grid"><a href="{{url_for('emergency')}}">Get Checklist</a></button>
                 </div>
                 <div class="grid-item">
                     <div class="icon-container">
@@ -935,7 +1178,7 @@ img {
                     </div>
                     <h3>Find Your Family</h3>
                     <p>Reports of missing persons available here</p>
-                    <button class="btn-grid"><a href="./missing.html">find now</a></button>
+                    <button class="btn-grid"><a href="{{url_for('missing')}}">find now</a></button>
                 </div>
                 <div class="grid-item">
                     <div class="icon-container">
@@ -943,7 +1186,7 @@ img {
                     </div>
                     <h3>Know Your Evacuation Routes</h3>
                     <p>Personalized evacuation maps for your area</p>
-                    <button class="btn-grid"><a href="./routes.html">View Routes</a></button>
+                    <button class="btn-grid"><a href="{{url_for('routes')}}">View Routes</a></button>
                 </div>
                 <div class="grid-item">
                     <div class="icon-container">
@@ -951,7 +1194,7 @@ img {
                     </div>
                     <h3>Learn CPR & First Aid</h3>
                     <p>Free training resources and local classes</p>
-                    <button class="btn-grid"><a href="./firstaid.html">Learn Now</a></button>
+                    <button class="btn-grid"><a href="{{url_for('firstaid')}}">Learn Now</a></button>
                 </div>
                 <div class="grid-item">
                     <div class="icon-container">
@@ -959,7 +1202,7 @@ img {
                     </div>
                     <h3>Protect Your Home</h3>
                     <p>Disaster-specific home protection tips</p>
-                    <button class="btn-grid"><a href="./protecthome.html">Secure Home</a></button>
+                    <button class="btn-grid"><a href="{{url_for('protection')}}">Secure Home</a></button>
                 </div>
                 <div class="grid-item">
                     <div class="icon-container">
@@ -967,7 +1210,7 @@ img {
                     </div>
                     <h3>Donations</h3>
                     <p>Build your social network</p>
-                    <button class="btn-grid"><a href="./donation.html">Join Community</a></button>
+                    <button class="btn-grid"><a href="{{url_for('donation')}}">Join Community</a></button>
                 </div>
             </div>
         </div>
@@ -1058,10 +1301,10 @@ img {
                 <div class="footer-section">
                     <h3>Quick Links</h3>
                     <ul>
-                        <li><a href="./contacts.html">Emergency Contacts</a></li>
-                        <li><a href="./user.html">Disaster Types</a></li>
-                        <li><a href="./missing.html">Volunteer Opportunities</a></li>
-                        <li><a href="./donation.html">Donate</a></li>
+                        <li><a href="{{url_for('contacts')}}">Emergency Contacts</a></li>
+                        <li><a href="{{url_for('user')}}">Disaster Types</a></li>
+                        <li><a href="{{url_for('missing')}}">Volunteer Opportunities</a></li>
+                        <li><a href="{{url_for('donation')}}">Donate</a></li>
                     </ul>
                 </div>
                 <div class="footer-section">
@@ -1098,8 +1341,7 @@ img {
         </div>
     </footer>
 
-    <script >
-document.addEventListener('DOMContentLoaded', function() {
+<script>document.addEventListener('DOMContentLoaded', function() {
     // Mobile Menu Toggle
     const mobileMenuBtn = document.querySelector('.mobile-menu');
     const nav = document.querySelector('.nav ul');
@@ -1132,6 +1374,103 @@ document.addEventListener('DOMContentLoaded', function() {
         const map = document.getElementById('disasterMap');
         // In a real implementation, this would use Google Maps API or similar
         map.innerHTML = '<div class="map-placeholder" style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#e8f4f8;color:#7f8c8d;font-weight:bold;">Interactive Disaster Map Would Display Here</div>';
+    };
+    const map = L.map('disasterMap').setView([20.5937, 78.9629], 5); // Centered on India
+    
+    // Add tile layer (OpenStreetMap)
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Sample markers for different threats (replace with real data)
+    L.marker([19.0760, 72.8777], { 
+        icon: L.divIcon({className: 'earthquake-icon', html: '🌋'}) 
+    }).addTo(map).bindPopup("Mumbai: Earthquake Alert (4.5 magnitude)");
+
+    L.marker([28.6139, 77.2090], { 
+        icon: L.divIcon({className: 'flood-icon', html: '🌊'}) 
+    }).addTo(map).bindPopup("Delhi: Flood Warning");
+    L.marker([12.9716, 77.5946], { 
+        icon: L.divIcon({className: 'wildfire-icon', html: '🔥'}) 
+    }).addTo(map).bindPopup("Bengaluru: Wildfire Reported");
+
+    // Add layer control functionality
+    document.querySelectorAll('.control-btn').forEach(btn => {
+        btn.addEventListener('click', function() {
+            document.querySelectorAll('.control-btn').forEach(b => b.classList.remove('active'));
+            this.classList.add('active');
+            // Here you would implement layer filtering logic
+        });
+    });
+
+    // SOS Functionality
+    const initSOS = () => {
+        const sosButton = document.getElementById('sosButton');
+        if (!sosButton) return;
+
+        sosButton.addEventListener('click', function() {
+            const button = this;
+            
+            // Add visual feedback
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> SENDING SOS...';
+            button.classList.add('sos-active');
+            
+            // Get user's location
+            navigator.geolocation.getCurrentPosition(
+                async (position) => {
+                    try {
+                        // Send to backend
+                        const response = await fetch('/api/sos', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                                'Authorization': localStorage.getItem('disasterToken')
+                            },
+                            body: JSON.stringify({
+                                latitude: position.coords.latitude,
+                                longitude: position.coords.longitude
+                            })
+                        });
+                        
+                        if (!response.ok) throw new Error('Failed to send SOS');
+                        
+                        // Update UI
+                        button.innerHTML = '<i class="fas fa-check"></i> SOS SENT! HELP IS COMING';
+                        button.classList.remove('sos-active');
+                        button.classList.add('sos-success');
+                        
+                        // Update map with new SOS marker (would be implemented in real map)
+                        console.log('SOS Location:', position.coords.latitude, position.coords.longitude);
+                        
+                        // Reset button after 5 seconds
+                        setTimeout(() => {
+                            button.innerHTML = '<i class="fas fa-bell"></i> EMERGENCY SOS';
+                            button.classList.remove('sos-success');
+                        }, 5000);
+                        
+                    } catch (error) {
+                        console.error('SOS Error:', error);
+                        button.innerHTML = '<i class="fas fa-exclamation-triangle"></i> SOS FAILED';
+                        button.classList.remove('sos-active');
+                        button.classList.add('sos-error');
+                        setTimeout(() => {
+                            button.innerHTML = '<i class="fas fa-bell"></i> EMERGENCY SOS';
+                            button.classList.remove('sos-error');
+                        }, 3000);
+                    }
+                },
+                (error) => {
+                    console.error('Geolocation Error:', error);
+                    button.innerHTML = '<i class="fas fa-exclamation-triangle"></i> LOCATION ACCESS DENIED';
+                    button.classList.remove('sos-active');
+                    button.classList.add('sos-error');
+                    setTimeout(() => {
+                        button.innerHTML = '<i class="fas fa-bell"></i> EMERGENCY SOS';
+                        button.classList.remove('sos-error');
+                    }, 3000);
+                }
+            );
+        });
     };
 
     // Testimonial carousel
@@ -1180,6 +1519,7 @@ document.addEventListener('DOMContentLoaded', function() {
             "wildfire": "For wildfires: Close all windows/doors, remove flammable items from around your home, and evacuate if ordered. More info at <a href='#'>Wildfire Safety</a>.",
             "kit": "A basic emergency kit should include: water (1 gal/person/day), non-perishable food, flashlight, batteries, first aid kit, medications, multi-tool, sanitation items, cash, important documents, and phone chargers.",
             "plan": "A family emergency plan should include: meeting places, emergency contacts, evacuation routes, pet plans, and special needs considerations. Use our <a href='#'>Family Plan Tool</a> to create one.",
+            "sos": "For emergencies, click the SOS button in the navigation or on the map page. This will alert authorities with your location.",
             "default": "I can help with information about earthquakes, floods, hurricanes, wildfires, emergency kits, and family plans. What would you like to know?"
         };
         
@@ -1237,6 +1577,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initMap();
     testimonialCarousel();
     initChatbot();
+    initSOS(); // Initialize SOS functionality
     
     // Animate progress meters when scrolled into view
     window.addEventListener('scroll', function() {
@@ -1265,7 +1606,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }, { threshold: 0.5 });
 
     observer.observe(document.querySelector('.dashboard'));
-});
-    </script>
+});</script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 </body>
 </html>
