@@ -1,15 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ResilienceHub - Disaster Preparedness & Response</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Roboto+Condensed:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <link rel="shortcut icon" href="./images/logo.jpeg" type="image/x-icon">
-</head>
+{% extends "base.html" %}
+
+{% block content %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="shortcut icon" href="./images/logo.jpeg" type="image/x-icon">
 <style>
 :root {
     --primary: #e74c3c;
@@ -795,6 +789,11 @@ img {
     border-bottom-right-radius: 5px;
 }
 
+.message.temporary {
+    opacity: 0.7;
+    font-style: italic;
+}
+
 .chat-input {
     display: flex;
     padding: 1rem;
@@ -1118,46 +1117,178 @@ img {
 #logout-btn:hover a {
     color: #1f2937; /* darker text */
 }
+
+/* --- Rumor Verifier UI --- */
+.rumor-verify {
+    background: #0f172a;
+    color: white;
+    padding: 5rem 0;
+}
+
+.rumor-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2.5rem;
+    align-items: center;
+}
+
+.rumor-content h2 {
+    text-align: left;
+    color: white;
+    margin-bottom: 1.5rem;
+}
+
+.rumor-content p {
+    color: rgba(255,255,255,0.85);
+}
+
+.eyebrow {
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-size: 0.85rem;
+}
+
+.rumor-stats {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 1.8rem;
+    flex-wrap: wrap;
+}
+
+.rumor-stat {
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 1rem 1.2rem;
+    border-radius: 12px;
+    min-width: 180px;
+}
+
+.rumor-stat span {
+    display: block;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--alert);
+}
+
+.rumor-tool {
+    background: white;
+    color: var(--dark);
+    border-radius: 16px;
+    padding: 2rem;
+    box-shadow: 0 15px 45px rgba(15, 23, 42, 0.35);
+}
+
+.rumor-tool h3 {
+    margin-bottom: 0.8rem;
+}
+
+.rumor-tool label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--dark);
+    margin-top: 1rem;
+    display: block;
+}
+
+.rumor-tool input,
+.rumor-tool textarea,
+.rumor-tool select {
+    width: 100%;
+    padding: 0.75rem 0.9rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    margin-top: 0.4rem;
+    font-size: 0.95rem;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.rumor-tool input:focus,
+.rumor-tool textarea:focus,
+.rumor-tool select:focus {
+    border-color: var(--secondary);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+}
+
+.rumor-tool button {
+    width: 100%;
+    margin-top: 1.5rem;
+    padding: 0.9rem;
+    font-size: 1rem;
+    background: var(--secondary);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.rumor-tool button:hover {
+    background: var(--secondary-dark);
+    transform: translateY(-2px);
+}
+
+.rumor-tool button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.rumor-result {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.2rem;
+    margin-top: 1.5rem;
+}
+
+.result-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-weight: 600;
+    padding: 0.3rem 0.8rem;
+    border-radius: 999px;
+    font-size: 0.9rem;
+}
+
+.result-chip.real {
+    background: rgba(16, 185, 129, 0.15);
+    color: #047857;
+}
+
+.result-chip.suspicious {
+    background: rgba(245, 158, 11, 0.15);
+    color: #b45309;
+}
+
+.result-chip.fake {
+    background: rgba(239, 68, 68, 0.15);
+    color: #b91c1c;
+}
+
+.rumor-meta {
+    margin-top: 0.8rem;
+    font-size: 0.9rem;
+    color: #475569;
+}
+
+.rumor-meta li {
+    margin-left: 1rem;
+    list-style: disc;
+}
+
+@media (max-width: 768px) {
+    .rumor-tool {
+        padding: 1.5rem;
+    }
+    .rumor-stats {
+        flex-direction: column;
+    }
+}
+
+
 </style>
-<body>
- <!-- Header/Navigation -->
-<header class="header">
-    <div class="container">
-        <div class="logo">
-            <i class="fas fa-shield-alt"></i>
-            <span>सुरक्षासेतु</span>
-        </div>
-        <nav class="nav">
-            <ul>
-                <li><a href="{{url_for('home')}}">Home</a></li>
-                <li><a href="{{url_for('admin_login')}}">Send Alerts</a></li>               
-                <li><a href="{{url_for('about')}}">About</a></li>
-                {% if session.get('user_email') %}
-                <li class="profile-menu">
-                <div class="profile-wrapper">
-                <div id="profile-initials" class="initials">{{user_initials}}</div>
-
-                <div id="dropdown" class="dropdown hidden">
-                <button id="logout-btn"> <a href="{{ url_for('logout') }}">Logout</a></button>
-                </div>
-                </div>
-
-                </li>
-                {% else %}
-                <li><a href="{{ url_for('register') }}">Register</a></li>
-                {% endif %}
-                <li>
-                    <button id="navSosButton" class="sos-nav-button">
-                        <i class="fas fa-bell"></i> SOS
-                    </button>
-                </li>
-            </ul>
-        </nav>
-        <div class="mobile-menu">
-            <i class="fas fa-bars"></i>
-        </div>
-    </div>
-</header>
 
     <!-- Hero Section -->
     <section class="hero">
@@ -1276,6 +1407,61 @@ img {
             </div>
         </div>
     </section>
+    <!-- Rumor Verification Section -->
+    <section class="rumor-verify" id="rumor-verify">
+        <div class="container">
+            <div class="rumor-wrapper">
+                <div class="rumor-content">
+                    <p class="eyebrow" style="color:#fbbf24;font-weight:600;">AI rumor firewall</p>
+                    <h2>Verify a rumor / news / message before forwarding</h2>
+                    <p>During fast-moving disasters, misinformation spreads faster than the threat itself.
+                        Paste any WhatsApp forward, social post, or news snippet and let our pretrained fake-news detector
+                        flag it as Real, Suspicious, or Fake. It is tuned using crisis misinformation datasets to stay aligned with disaster communication issues.</p>
+                    <div class="rumor-stats">
+                        <div class="rumor-stat">
+                            <span>1 in 3</span>
+                            <small>disaster forwards we monitor are altered or incomplete.</small>
+                        </div>
+                        <div class="rumor-stat">
+                            <span>AI + NLP</span>
+                            <small>powered by pretrained fake-news classifiers for instant screening.</small>
+                        </div>
+                    </div>
+                </div>
+                <div class="rumor-tool">
+                    <h3>Instant credibility scan</h3>
+                    <p style="color:#475569;font-size:0.9rem;">We never store this text. It is only used to score credibility.</p>
+                    <form id="rumorForm">
+                        <label for="rumorText">Rumor / message *</label>
+                        <textarea id="rumorText" rows="4" placeholder="Paste the forward or claim you received..." required></textarea>
+                        
+                        <label for="rumorContext">Context</label>
+                        <select id="rumorContext">
+                            <option value="">Pick a topic (optional)</option>
+                            <option value="Earthquake alert">Earthquake alert</option>
+                            <option value="Flood evacuation">Flood evacuation</option>
+                            <option value="Cyclone or hurricane bulletin">Cyclone / hurricane update</option>
+                            <option value="Disease outbreak">Disease outbreak</option>
+                            <option value="Relief distribution">Relief distribution</option>
+                            <option value="Other disaster rumor">Other disaster rumor</option>
+                        </select>
+                        
+                        <label for="rumorSource">Source / link</label>
+                        <input type="text" id="rumorSource" placeholder="WhatsApp group, URL, channel...">
+                        
+                        <button type="submit" id="rumorSubmit">Verify now</button>
+                    </form>
+                    <div class="rumor-result" id="rumorResult" hidden>
+                        <div id="rumorBadge" class="result-chip suspicious">Suspicious</div>
+                        <h4 id="rumorHeadline" style="margin-top:1rem;">Awaiting analysis...</h4>
+                        <p id="rumorAdvice" style="color:#475569;margin:0.5rem 0;"></p>
+                        <ul class="rumor-meta" id="rumorReasons"></ul>
+                        <p class="rumor-meta" id="rumorTimestamp"></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Testimonials Section -->
     <section class="testimonials">
@@ -1340,12 +1526,12 @@ img {
         </div>
         <div class="ai-chatbox" id="aiChatbox">
             <div class="chat-header">
-                <h3>DisasterBot Assistant</h3>
+                <h3>🤖 AI DisasterBot</h3>
                 <button class="close-chat"><i class="fas fa-times"></i></button>
             </div>
             <div class="chat-messages" id="chatMessages">
                 <div class="message bot">
-                    <p>Hello! I'm DisasterBot. How can I help you with disaster preparedness or response today?</p>
+                    <p>Hello! I'm your AI-powered DisasterBot. I can help you with disaster preparedness, emergency procedures, safety tips, and answer any questions about disaster management. How can I assist you today?</p>
                 </div>
             </div>
             <div class="chat-input">
@@ -1354,53 +1540,6 @@ img {
             </div>
         </div>
     </div>
-
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h3>Quick Links</h3>
-                    <ul>
-                        <li><a href="{{url_for('contacts')}}">Emergency Contacts</a></li>
-                        <li><a href="{{url_for('user')}}">Disaster Types</a></li>
-                        <li><a href="{{url_for('missing')}}">Volunteer Opportunities</a></li>
-                        <li><a href="{{url_for('donation')}}">Donate</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h3>Resources</h3>
-                    <ul>
-                        <li><a href="#">Printable Guides</a></li>
-                        <li><a href="#">Mobile App</a></li>
-                        <li><a href="#">Training Courses</a></li>
-                        <li><a href="#">Research</a></li>
-                    </ul>
-                </div>
-                <div class="footer-section">
-                    <h3>Connect</h3>
-                    <div class="social-icons">
-                        <a href="#"><i class="fab fa-facebook"></i></a>
-                        <a href="#"><i class="fab fa-twitter"></i></a>
-                        <a href="#"><i class="fab fa-instagram"></i></a>
-                        <a href="#"><i class="fab fa-youtube"></i></a>
-                    </div>
-                    <div class="newsletter">
-                        <input type="email" placeholder="Your email">
-                        <button>Subscribe</button>
-                    </div>
-                </div>
-            </div>
-            <div class="footer-bottom">
-                <p>&copy; 2023 ResilienceHub. All rights reserved.</p>
-                <div class="footer-links">
-                    <a href="#">Privacy Policy</a>
-                    <a href="#">Terms of Service</a>
-                    <a href="#">Accessibility</a>
-                </div>
-            </div>
-        </div>
-    </footer>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -1638,7 +1777,7 @@ document.addEventListener('DOMContentLoaded', initSOS);
         }, 5000);
     };
 
-// AI Chatbot functionality
+// AI Chatbot functionality with LangChain + Groq
 const initChatbot = () => {
     // DOM elements
     const elements = {
@@ -1650,59 +1789,64 @@ const initChatbot = () => {
         sendMessage: document.getElementById('sendMessage')
     };
 
-    // Bot responses with priority matching
-    const botResponses = [
-        { keywords: ['hello', 'hi', 'hey'], response: "Hello! How can I help you with disaster preparedness today?" },
-        { keywords: ['earthquake', 'quake'], response: "For earthquakes: DROP to the ground, COVER under sturdy furniture, and HOLD ON until shaking stops. After, check for injuries and gas leaks. More info at <a href='#'>Earthquake Preparedness</a>." },
-        { keywords: ['flood', 'flooding'], response: "For floods: Move to higher ground immediately. Avoid walking or driving through flood waters. Turn off utilities if instructed. More info at <a href='#'>Flood Safety</a>." },
-        { keywords: ['hurricane', 'typhoon'], response: "For hurricanes: Board up windows, secure outdoor items, and evacuate if ordered. Have supplies for at least 3 days. More info at <a href='#'>Hurricane Preparedness</a>." },
-        { keywords: ['wildfire', 'fire', 'forest fire'], response: "For wildfires: Close all windows/doors, remove flammable items from around your home, and evacuate if ordered. More info at <a href='#'>Wildfire Safety</a>." },
-        { keywords: ['kit', 'emergency kit', 'supplies','first-aid'], response: "A basic emergency kit should include: water (1 gal/person/day), non-perishable food, flashlight, batteries, first aid kit, medications, multi-tool, sanitation items, cash, important documents, and phone chargers." },
-        { keywords: ['plan', 'emergency plan', 'family plan'], response: "A family emergency plan should include: meeting places, emergency contacts, evacuation routes, pet plans, and special needs considerations. Use our <a href='#'>Family Plan Tool</a> to create one." },
-        { keywords: ['sos', 'emergency', 'help'], response: "For emergencies, click the SOS button in the navigation or on the map page. This will alert authorities with your location." }
-    ];
-
-    const defaultResponse = "I can help with information about earthquakes, floods, hurricanes, wildfires, emergency kits, and family plans. What would you like to know?";
-
     // Event handlers
     const toggleChat = () => elements.aiChatbox.classList.toggle('active');
     const closeChat = () => elements.aiChatbox.classList.remove('active');
 
-    const sendUserMessage = () => {
+    const sendUserMessage = async () => {
         const message = elements.userInput.value.trim();
         if (!message) return;
 
+        // Add user message to chat
         addMessage(message, 'user');
         elements.userInput.value = '';
         
-        // Debounced response
-        setTimeout(() => {
-            const response = generateBotResponse(message.toLowerCase());
-            addMessage(response, 'bot');
-        }, 800);
+        // Show typing indicator
+        const typingDiv = addMessage('DisasterBot is thinking...', 'bot', true);
+        
+        try {
+            // Send message to backend API
+            const response = await fetch('/api/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ message: message })
+            });
+            
+            const data = await response.json();
+            
+            // Remove typing indicator
+            typingDiv.remove();
+            
+            if (response.ok) {
+                addMessage(data.response, 'bot');
+            } else {
+                addMessage('Sorry, I encountered an error. Please try again.', 'bot');
+            }
+        } catch (error) {
+            console.error('Chat error:', error);
+            typingDiv.remove();
+            addMessage('Sorry, I\'m having trouble connecting. Please check your internet connection and try again.', 'bot');
+        }
     };
 
     const handleKeyPress = (e) => {
-        if (e.key === 'Enter') sendUserMessage();
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            sendUserMessage();
+        }
     };
 
     // Message management
-    const addMessage = (text, sender) => {
+    const addMessage = (text, sender, isTemporary = false) => {
         const messageDiv = document.createElement('div');
         messageDiv.className = `message ${sender}`;
+        if (isTemporary) messageDiv.classList.add('temporary');
         messageDiv.innerHTML = `<p>${text}</p>`;
         elements.chatMessages.appendChild(messageDiv);
         elements.chatMessages.scrollTop = elements.chatMessages.scrollHeight;
-    };
-
-    // Efficient response generation
-    const generateBotResponse = (message) => {
-        // Find the first matching response based on keyword priority
-        const matchedResponse = botResponses.find(response => 
-            response.keywords.some(keyword => message.includes(keyword))
-        );
-        
-        return matchedResponse ? matchedResponse.response : defaultResponse;
+        return messageDiv;
     };
 
     // Event listeners
@@ -1711,13 +1855,84 @@ const initChatbot = () => {
     elements.sendMessage.addEventListener('click', sendUserMessage);
     elements.userInput.addEventListener('keypress', handleKeyPress);
 };
+// Rumor verification feature
+    const initRumorVerifier = () => {
+        const form = document.getElementById('rumorForm');
+        if (!form) return;
 
+        const rumorText = document.getElementById('rumorText');
+        const rumorContext = document.getElementById('rumorContext');
+        const rumorSource = document.getElementById('rumorSource');
+        const submitBtn = document.getElementById('rumorSubmit');
+
+        const resultBox = document.getElementById('rumorResult');
+        const badge = document.getElementById('rumorBadge');
+        const headline = document.getElementById('rumorHeadline');
+        const advice = document.getElementById('rumorAdvice');
+        const reasons = document.getElementById('rumorReasons');
+        const timestamp = document.getElementById('rumorTimestamp');
+
+        const setBadge = (classification) => {
+            badge.classList.remove('real', 'fake', 'suspicious');
+            const cls = classification ? classification.toLowerCase() : 'suspicious';
+            badge.classList.add(cls);
+            badge.textContent = classification || 'Suspicious';
+        };
+
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const message = rumorText.value.trim();
+            if (!message) {
+                return;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Scanning...';
+            resultBox.hidden = false;
+            setBadge('Suspicious');
+            headline.textContent = 'Evaluating message...';
+            advice.textContent = 'Hang tight while our NLP model compares this against fake-news datasets.';
+            reasons.innerHTML = '';
+            timestamp.textContent = '';
+
+            try {
+                const response = await fetch('/api/rumor-check', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        message,
+                        context: rumorContext.value,
+                        source: rumorSource.value
+                    })
+                });
+
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.error || 'Unable to analyze rumor right now.');
+                }
+
+                setBadge(data.classification);
+                headline.textContent = `${data.classification} (${data.confidence || 0}%)`;
+                advice.textContent = data.advice || '';
+                reasons.innerHTML = (data.reasons || []).map(item => `<li>${item}</li>`).join('');
+                timestamp.textContent = data.evaluated_at ? `Analyzed at ${new Date(data.evaluated_at).toLocaleString()}` : '';
+            } catch (error) {
+                setBadge('Suspicious');
+                headline.textContent = 'We hit a snag';
+                advice.textContent = error.message || 'Please try again later.';
+                reasons.innerHTML = '<li>Model may still be downloading or network is offline.</li>';
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Verify now';
+            }
+        });
+    };
 // Initialize all functionality
 initMap();
 testimonialCarousel();
 initChatbot();
 initSOS();
-    
+initRumorVerifier();
     // Animate progress meters when scrolled into view
     window.addEventListener('scroll', function() {
         const meters = document.querySelectorAll('.meter-progress');
@@ -1761,5 +1976,4 @@ document.addEventListener("click", (e) => {
     }
 });
 </script>
-</body>
-</html>
+{% endblock %}

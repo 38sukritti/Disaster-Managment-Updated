@@ -1,3 +1,5 @@
+{% extends "base.html" %}
+{% block content %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -319,6 +321,14 @@
             border-color: var(--accent);
         }
         
+        .volunteer-form-section {
+            margin-top: 30px;
+        }
+        
+        .inline-label {
+            display: inline;
+        }
+        
         @media (max-width: 768px) {
             .tabs {
                 flex-direction: column;
@@ -359,23 +369,23 @@
         <div class="tab-content active" id="missing">
             <div class="search-section">
                 <h2>Search Missing Persons Database</h2>
-                <form class="search-form">
+                <form class="search-form" method="GET" action="{{ url_for('missing') }}">
                     <div class="form-group">
                         <label for="search-name">Name</label>
-                        <input type="text" id="search-name" placeholder="Enter full or partial name">
+                        <input type="text" id="search-name" name="name" placeholder="Enter full or partial name" value="{{ name or '' }}">
                     </div>
                     <div class="form-group">
                         <label for="search-location">Last Known Location</label>
-                        <input type="text" id="search-location" placeholder="City, region or disaster area">
+                        <input type="text" id="search-location" name="location" placeholder="City, region or disaster area" value="{{ location or '' }}">
                     </div>
                     <div class="form-group">
                         <label for="search-age">Age Range</label>
-                        <select id="search-age">
-                            <option value="">Any age</option>
-                            <option value="0-12">Child (0-12)</option>
-                            <option value="13-17">Teen (13-17)</option>
-                            <option value="18-59">Adult (18-59)</option>
-                            <option value="60+">Senior (60+)</option>
+                        <select id="search-age" name="age_range">
+                            <option value="" {% if not age_range %}selected{% endif %}>Any age</option>
+                            <option value="0-12" {% if age_range == '0-12' %}selected{% endif %}>Child (0-12)</option>
+                            <option value="13-17" {% if age_range == '13-17' %}selected{% endif %}>Teen (13-17)</option>
+                            <option value="18-59" {% if age_range == '18-59' %}selected{% endif %}>Adult (18-59)</option>
+                            <option value="60+" {% if age_range == '60+' %}selected{% endif %}>Senior (60+)</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -387,73 +397,55 @@
             
             <h2>Recently Reported Missing Persons</h2>
             <div class="missing-persons-grid" id="missing-persons-list">
-                <!-- Sample person cards - these would be dynamically generated in a real app -->
-                <div class="person-card">
-                    <div class="person-image" style="background-image: url('https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80');"></div>
-                    <div class="person-details">
-                        <h3 class="person-name">Pawan Kumar</h3>
-                        <div class="person-meta">32 years old • 5'9" • Hispanic male</div>
-                        <div class="last-seen">
-                            <strong>Last seen:</strong> July 15, 2024 near Cedar Creek flood zone
+                {% if persons %}
+                    {% for p in persons %}
+                    <div class="person-card">
+                        <div class="person-image" style="background-image: url('{% if p.photo_path %}{{ url_for("static", filename=p.photo_path) }}{% else %}https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=400&q=80{% endif %}');"></div>
+                        <div class="person-details">
+                            <h3 class="person-name">{{ p.full_name }}</h3>
+                            <div class="person-meta">
+                                {% if p.age %}{{ p.age }} years old • {% endif %}{{ p.gender or '' }}
+                            </div>
+                            <div class="last-seen">
+                                <strong>Last seen:</strong>
+                                {% if p.last_seen_date %}
+                                    {{ p.last_seen_date.strftime('%b %d, %Y') }}
+                                {% endif %}
+                                at {{ p.last_location }}
+                            </div>
+                            <p>{{ p.description }}</p>
+                            <a href="#" class="sighting-btn"
+                               data-person="{{ p.full_name }}"
+                               data-person-id="{{ p.id }}">Report Sighting</a>
                         </div>
-                        <p>Wearing blue jeans and red t-shirt. Has tattoo of eagle on right forearm.</p>
-                        <a href="#" class="sighting-btn" data-person="David Rodriguez">Report Sighting</a>
                     </div>
-                </div>
-                
-                <div class="person-card">
-                    <div class="person-image" style="background-image: url('https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80');"></div>
-                    <div class="person-details">
-                        <h3 class="person-name">Sarah Kapoor</h3>
-                        <div class="person-meta">28 years old • 5'4" • Asian female</div>
-                        <div class="last-seen">
-                            <strong>Last seen:</strong> July 14, 2024 at Mumbai filmcity, India.
-                        </div>
-                        <p>Carrying a pink backpack. Has asthma and may need medication.</p>
-                        <a href="#" class="sighting-btn" data-person="Sarah Chen">Report Sighting</a>
-                    </div>
-                </div>
-                
-                <div class="person-card">
-                    <div class="person-image" style="background-image: url('https://images.unsplash.com/photo-1544005313-94ddf0286df2?ixlib=rb-1.2.1&auto=format&fit=crop&w=634&q=80');"></div>
-                    <div class="person-details">
-                        <h3 class="person-name">Sukritti Singh</h3>
-                        <div class="person-meta">45 years old • 5'6" • Brown female</div>
-                        <div class="last-seen">
-                            <strong>Last seen:</strong> July 16, 2024 near Allen institute,Mohalli
-                        </div>
-                        <p>Wearing purple dress. Has a service dog named Woofy (Pamerian).</p>
-                        <a href="#" class="sighting-btn" data-person="Emily Johnson">Report Sighting</a>
-                    </div>
-                </div>
+                    {% endfor %}
+                {% else %}
+                    <p>No missing persons reported yet.</p>
+                {% endif %}
             </div>
             
-            <div class="pagination">
-                <button class="page-btn active">1</button>
-                <button class="page-btn">2</button>
-                <button class="page-btn">3</button>
-                <button class="page-btn">Next →</button>
-            </div>
+            <!-- Pagination placeholder - can be wired to backend if needed -->
         </div>
         
         <!-- Report Missing Person Tab -->
         <div class="tab-content" id="report">
             <div class="search-section">
                 <h2>Report a Missing Person</h2>
-                <form id="report-form">
+                <form id="report-form" method="POST" enctype="multipart/form-data" action="{{ url_for('report_missing') }}">
                     <div class="form-group">
                         <label for="missing-name">Full Name</label>
-                        <input type="text" id="missing-name" required>
+                        <input type="text" id="missing-name" name="missing-name" required>
                     </div>
                     
                     <div class="grid-2">
                         <div class="form-group">
                             <label for="missing-age">Age</label>
-                            <input type="number" id="missing-age" required>
+                            <input type="number" id="missing-age" name="missing-age" required>
                         </div>
                         <div class="form-group">
                             <label for="missing-gender">Gender</label>
-                            <select id="missing-gender" required>
+                            <select id="missing-gender" name="missing-gender" required>
                                 <option value="">Select</option>
                                 <option value="male">Male</option>
                                 <option value="female">Female</option>
@@ -464,42 +456,42 @@
                     
                     <div class="form-group">
                         <label for="missing-location">Last Known Location</label>
-                        <input type="text" id="missing-location" placeholder="Address, city or landmark" required>
+                        <input type="text" id="missing-location" name="missing-location" placeholder="Address, city or landmark" required>
                     </div>
                     
                     <div class="form-group">
                         <label for="missing-date">Date Last Seen</label>
-                        <input type="date" id="missing-date" required>
+                        <input type="date" id="missing-date" name="missing-date" required>
                     </div>
                     
                     <div class="form-group">
                         <label for="missing-description">Physical Description</label>
-                        <textarea id="missing-description" rows="3" placeholder="Height, weight, hair color, distinctive features, clothing last seen wearing..." required></textarea>
+                        <textarea id="missing-description" name="missing-description" rows="3" placeholder="Height, weight, hair color, distinctive features, clothing last seen wearing..." required></textarea>
                     </div>
                     
                     <div class="form-group">
                         <label for="missing-notes">Additional Information</label>
-                        <textarea id="missing-notes" rows="2" placeholder="Medical conditions, special needs, possible destinations..."></textarea>
+                        <textarea id="missing-notes" name="missing-notes" rows="2" placeholder="Medical conditions, special needs, possible destinations..."></textarea>
                     </div>
                     
                     <div class="form-group">
                         <label for="missing-photo">Upload Photo</label>
-                        <input type="file" id="missing-photo" accept="image/*">
+                        <input type="file" id="missing-photo" name="missing-photo" accept="image/*">
                     </div>
                     
                     <div class="form-group">
                         <label for="reporter-name">Your Name</label>
-                        <input type="text" id="reporter-name" required>
+                        <input type="text" id="reporter-name" name="reporter-name" required>
                     </div>
                     
                     <div class="form-group">
                         <label for="reporter-contact">Your Contact Information</label>
-                        <input type="text" id="reporter-contact" placeholder="Phone and/or email" required>
+                        <input type="text" id="reporter-contact" name="reporter-contact" placeholder="Phone and/or email" required>
                     </div>
                     
                     <div class="form-group">
                         <label for="reporter-relation">Your Relationship to Missing Person</label>
-                        <input type="text" id="reporter-relation" required>
+                        <input type="text" id="reporter-relation" name="reporter-relation" required>
                     </div>
                     
                     <button type="submit" class="btn btn-secondary">Submit Report</button>
@@ -550,39 +542,38 @@
                         <button class="btn volunteer-btn" data-role="Information Coordinator">Volunteer</button>
                     </div>
                 </div>
-            </div>
             
-            <div class="search-section" style="margin-top: 30px;">
+            <div class="search-section">
                 <h2>Register as a Volunteer</h2>
-                <form id="volunteer-form">
+                <form id="volunteer-form" method="POST" action="{{ url_for('register_volunteer') }}">
                     <div class="form-group">
                         <label for="vol-name">Full Name</label>
-                        <input type="text" id="vol-name" required>
+                        <input type="text" id="vol-name" name="vol-name" required>
                     </div>
                     
                     <div class="form-group">
                         <label for="vol-email">Email</label>
-                        <input type="email" id="vol-email" required>
+                        <input type="email" id="vol-email" name="vol-email" required>
                     </div>
                     
                     <div class="form-group">
                         <label for="vol-phone">Phone Number</label>
-                        <input type="tel" id="vol-phone" required>
+                        <input type="tel" id="vol-phone" name="vol-phone" required>
                     </div>
                     
                     <div class="form-group">
                         <label for="vol-location">Your Location</label>
-                        <input type="text" id="vol-location" placeholder="City and state" required>
+                        <input type="text" id="vol-location" name="vol-location" placeholder="City and state" required>
                     </div>
                     
                     <div class="form-group">
                         <label for="vol-skills">Skills & Qualifications</label>
-                        <textarea id="vol-skills" rows="3" placeholder="First aid, counseling, languages spoken, search experience..."></textarea>
+                        <textarea id="vol-skills" name="vol-skills" rows="3" placeholder="First aid, counseling, languages spoken, search experience..."></textarea>
                     </div>
                     
                     <div class="form-group">
                         <label for="vol-availability">Availability</label>
-                        <select id="vol-availability" required>
+                        <select id="vol-availability" name="vol-availability" required>
                             <option value="">Select</option>
                             <option value="full">Full-time (40+ hrs/week)</option>
                             <option value="part">Part-time (10-30 hrs/week)</option>
@@ -593,7 +584,7 @@
                     
                     <div class="form-group">
                         <label for="vol-interests">Areas of Interest</label>
-                        <select id="vol-interests" multiple size="4">
+                        <select id="vol-interests" name="vol-interests" multiple size="4">
                             <option value="search">Search & Rescue</option>
                             <option value="support">Family Support</option>
                             <option value="admin">Administrative Help</option>
@@ -615,30 +606,31 @@
                 <button class="close-modal">&times;</button>
             </div>
             <div class="modal-body">
-                <form id="sighting-form">
+                <form id="sighting-form" method="POST" enctype="multipart/form-data" action="{{ url_for('report_sighting') }}">
+                    <input type="hidden" id="missing-person-id" name="missing_person_id">
                     <div class="form-group">
                         <label for="sighting-date">Date of Sighting</label>
-                        <input type="date" id="sighting-date" required>
+                        <input type="date" id="sighting-date" name="sighting-date" required>
                     </div>
                     
                     <div class="form-group">
                         <label for="sighting-location">Exact Location</label>
-                        <input type="text" id="sighting-location" placeholder="Address, city, or coordinates" required>
+                        <input type="text" id="sighting-location" name="sighting-location" placeholder="Address, city, or coordinates" required>
                     </div>
                     
                     <div class="form-group">
                         <label for="sighting-details">Details of Sighting</label>
-                        <textarea id="sighting-details" rows="4" required placeholder="What was the person doing? Who were they with? Condition/appearance..."></textarea>
+                        <textarea id="sighting-details" name="sighting-details" rows="4" required placeholder="What was the person doing? Who were they with? Condition/appearance..."></textarea>
                     </div>
                     
                     <div class="form-group">
                         <label for="sighting-contact">Your Contact Information</label>
-                        <input type="text" id="sighting-contact" placeholder="Phone/email (will be shared with family)" required>
+                        <input type="text" id="sighting-contact" name="sighting-contact" placeholder="Phone/email (will be shared with family)" required>
                     </div>
                     
                     <div class="form-group">
                         <label for="sighting-photo">Upload Photo/Video (if available)</label>
-                        <input type="file" id="sighting-photo" accept="image/*,video/*">
+                        <input type="file" id="sighting-photo" name="sighting-photo" accept="image/*,video/*">
                     </div>
                     
                     <button type="submit" class="btn">Submit Sighting Report</button>
@@ -655,45 +647,41 @@
                 <button class="close-modal">&times;</button>
             </div>
             <div class="modal-body">
-                <form id="specific-volunteer-form">
+                <form id="specific-volunteer-form" method="POST" action="{{ url_for('apply_role') }}">
+                    <input type="hidden" id="role-name" name="role_name">
                     <div id="role-description">
                         <!-- Filled by JavaScript -->
                     </div>
                     
                     <div class="form-group">
                         <label for="vol-specific-name">Full Name</label>
-                        <input type="text" id="vol-specific-name" required>
+                        <input type="text" id="vol-specific-name" name="vol-specific-name" required>
                     </div>
                     
                     <div class="form-group">
                         <label for="vol-specific-email">Email</label>
-                        <input type="email" id="vol-specific-email" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="vol-specific-phone">Phone Number</label>
-                        <input type="tel" id="vol-specific-phone" required>
+                        <input type="email" id="vol-specific-email" name="vol-specific-email" required>
                     </div>
                     
                     <div class="form-group">
                         <label>Are you available for immediate deployment?</label>
                         <div>
                             <input type="radio" id="vol-immediate-yes" name="immediate" value="yes">
-                            <label for="vol-immediate-yes" style="display: inline;">Yes</label>
+                            <label for="vol-immediate-yes" class="inline-label">Yes</label>
                             
                             <input type="radio" id="vol-immediate-no" name="immediate" value="no" checked>
-                            <label for="vol-immediate-no" style="display: inline;">No</label>
+                            <label for="vol-immediate-no" class="inline-label">No</label>
                         </div>
                     </div>
                     
                     <div class="form-group">
                         <label for="vol-specific-experience">Relevant Experience</label>
-                        <textarea id="vol-specific-experience" rows="3" required></textarea>
+                        <textarea id="vol-specific-experience" name="vol-specific-experience" rows="3" required></textarea>
                     </div>
                     
                     <div class="form-group">
                         <label for="vol-specific-notes">Additional Information</label>
-                        <textarea id="vol-specific-notes" rows="2"></textarea>
+                        <textarea id="vol-specific-notes" name="vol-specific-notes" rows="2"></textarea>
                     </div>
                     
                     <button type="submit" class="btn">Submit Application</button>
@@ -723,7 +711,9 @@
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
                 const personName = btn.getAttribute('data-person');
+                const personId = btn.getAttribute('data-person-id');
                 document.getElementById('modal-person-name').textContent = personName;
+                document.getElementById('missing-person-id').value = personId;
                 sightingModal.style.display = 'flex';
                 document.body.style.overflow = 'hidden';
             });
@@ -735,6 +725,7 @@
             btn.addEventListener('click', () => {
                 const role = btn.getAttribute('data-role');
                 document.getElementById('modal-role-name').textContent = role;
+                document.getElementById('role-name').value = role;
                 
                 // In a real app, you'd fetch role details from a database
                 let description = '';
@@ -789,49 +780,8 @@
             }
         });
         
-        // Form submissions
-        document.getElementById('report-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            alert('Missing person report submitted. Our team will contact you shortly.');
-            // In a real app, you would send this data to your server
-            e.target.reset();
-        });
-        
-        document.getElementById('volunteer-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            alert('Thank you for your volunteer application! We will contact you with next steps.');
-            // In a real app, you would send this data to your server
-            e.target.reset();
-        });
-        
-        document.getElementById('sighting-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            alert('Thank you for reporting this sighting. This information could be crucial to reuniting a family.');
-            // In a real app, you would send this data to your server
-            e.target.reset();
-            sightingModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        });
-        
-        document.getElementById('specific-volunteer-form').addEventListener('submit', (e) => {
-            e.preventDefault();
-            alert('Application submitted for ' + document.getElementById('modal-role-name').textContent);
-            // In a real app, you would send this data to your server
-            e.target.reset();
-            volunteerModal.style.display = 'none';
-            document.body.style.overflow = 'auto';
-        });
-        
-        // Simulate loading more missing persons (in a real app, this would be an API call)
-        document.querySelectorAll('.page-btn').forEach(btn => {
-            btn.addEventListener('click', () => {
-                if (btn.textContent !== 'Next →') {
-                    document.querySelectorAll('.page-btn').forEach(b => b.classList.remove('active'));
-                    btn.classList.add('active');
-                }
-                // Here you would load the appropriate page of results
-            });
-        });
+        // Forms are now handled by Flask backend via normal POST/redirect
     </script>
 </body>
 </html>
+{% endblock %}

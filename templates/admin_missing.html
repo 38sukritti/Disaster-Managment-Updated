@@ -1,0 +1,745 @@
+{% extends "base.html" %}
+
+{% block content %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Missing Persons - Admin</title>
+    <style>
+        /* Reset and Base Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        
+        /* Header Section */
+        .d-flex {
+            display: flex;
+        }
+        
+        .justify-content-between {
+            justify-content: space-between;
+        }
+        
+        .align-items-center {
+            align-items: center;
+        }
+        
+        .mb-4 {
+            margin-bottom: 2rem;
+        }
+        
+        .mb-0 {
+            margin-bottom: 0 !important;
+        }
+        
+        h2 {
+            color: #2c3e50;
+            font-size: 2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .text-muted {
+            color: #6c757d !important;
+        }
+        
+        /* Button Styles */
+        .btn {
+            display: inline-block;
+            font-weight: 500;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: middle;
+            user-select: none;
+            border: 1px solid transparent;
+            padding: 0.5rem 1rem;
+            font-size: 1rem;
+            line-height: 1.5;
+            border-radius: 0.375rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        
+        .btn-outline-secondary {
+            color: #6c757d;
+            border-color: #6c757d;
+            background-color: transparent;
+        }
+        
+        .btn-outline-secondary:hover {
+            color: #fff;
+            background-color: #6c757d;
+            border-color: #6c757d;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(108, 117, 125, 0.2);
+        }
+        
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+            border-radius: 0.25rem;
+        }
+        
+        .btn-primary {
+            color: #fff;
+            background-color: #3498db;
+            border-color: #3498db;
+        }
+        
+        .btn-primary:hover {
+            background-color: #2980b9;
+            border-color: #2980b9;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.2);
+        }
+        
+        .btn-danger {
+            color: #fff;
+            background-color: #e74c3c;
+            border-color: #e74c3c;
+        }
+        
+        .btn-danger:hover {
+            background-color: #c0392b;
+            border-color: #c0392b;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(231, 76, 60, 0.2);
+        }
+        
+        /* Card Styles */
+        .card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            word-wrap: break-word;
+            background-color: #fff;
+            background-clip: border-box;
+            border: 1px solid rgba(0, 0, 0, 0.125);
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        
+        .card:hover {
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            padding: 1.25rem 1.5rem;
+            margin-bottom: 0;
+            background-color: #2c3e50;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.125);
+            color: white;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        .card-body {
+            flex: 1 1 auto;
+            padding: 1.5rem;
+        }
+        
+        .p-0 {
+            padding: 0 !important;
+        }
+        
+        /* Table Styles */
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .table {
+            width: 100%;
+            margin-bottom: 1rem;
+            color: #212529;
+            border-collapse: collapse;
+        }
+        
+        .table-hover tbody tr:hover {
+            background-color: rgba(52, 152, 219, 0.05);
+            transform: scale(1.002);
+            transition: all 0.2s ease;
+        }
+        
+        .table thead th {
+            vertical-align: bottom;
+            border-bottom: 2px solid #dee2e6;
+            padding: 1rem;
+            font-weight: 600;
+            color: #2c3e50;
+            background-color: #f8f9fa;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .table.table-hover tbody tr {
+            border-bottom: 1px solid #dee2e6;
+            transition: all 0.2s ease;
+        }
+        
+        .table tbody td {
+            padding: 1rem;
+            vertical-align: middle;
+            border-top: 1px solid #dee2e6;
+        }
+        
+        .table tbody tr:first-child td {
+            border-top: none;
+        }
+        
+        /* Form Elements */
+        .form-select {
+            display: block;
+            width: 100%;
+            padding: 0.375rem 2.25rem 0.375rem 0.75rem;
+            font-size: 1rem;
+            font-weight: 400;
+            line-height: 1.5;
+            color: #212529;
+            background-color: #fff;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 16px 12px;
+            border: 1px solid #ced4da;
+            border-radius: 0.375rem;
+            transition: all 0.3s ease;
+            appearance: none;
+        }
+        
+        .form-select-sm {
+            padding: 0.25rem 2rem 0.25rem 0.5rem;
+            font-size: 0.875rem;
+            border-radius: 0.25rem;
+        }
+        
+        .form-select:focus {
+            border-color: #3498db;
+            outline: 0;
+            box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+        }
+        
+        /* Utility Classes */
+        .gap-1 {
+            gap: 0.5rem;
+        }
+        
+        .d-flex {
+            display: flex;
+        }
+        
+        .text-muted {
+            color: #6c757d !important;
+        }
+        
+        small {
+            font-size: 0.875em;
+        }
+        
+        /* Alert Styles */
+        .alert {
+            position: relative;
+            padding: 1rem 1.5rem;
+            margin-bottom: 1rem;
+            border: 1px solid transparent;
+            border-radius: 0.75rem;
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .alert-info {
+            color: #055160;
+            background-color: #cff4fc;
+            border-color: #b6effb;
+        }
+        
+        /* Links */
+        a {
+            color: #3498db;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        a:hover {
+            color: #2980b9;
+            text-decoration: underline;
+        }
+        
+        /* Status Badges */
+        select.form-select option[value="active"] {
+            color: #28a745;
+        }
+        
+        select.form-select option[value="found"] {
+            color: #17a2b8;
+        }
+        
+        select.form-select option[value="closed"] {
+            color: #6c757d;
+        }
+        
+        /* Loading Animation */
+        .loading {
+            position: relative;
+            pointer-events: none;
+        }
+        
+        .loading::after {
+            content: '';
+            position: absolute;
+            width: 16px;
+            height: 16px;
+            top: 50%;
+            left: 50%;
+            margin-left: -8px;
+            margin-top: -8px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .d-flex {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 1rem;
+            }
+            
+            .d-flex.justify-content-between {
+                justify-content: flex-start;
+            }
+            
+            .btn-outline-secondary {
+                align-self: flex-start;
+            }
+            
+            .table {
+                font-size: 0.9rem;
+            }
+            
+            .table thead th,
+            .table tbody td {
+                padding: 0.75rem 0.5rem;
+            }
+            
+            .card-header {
+                padding: 1rem;
+                font-size: 1rem;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            body {
+                padding: 15px;
+            }
+            
+            h2 {
+                font-size: 1.5rem;
+            }
+            
+            .table-responsive {
+                border: 0;
+            }
+            
+            .table thead {
+                display: none;
+            }
+            
+            .table tbody tr {
+                display: block;
+                margin-bottom: 1rem;
+                border: 1px solid #dee2e6;
+                border-radius: 0.5rem;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            }
+            
+            .table tbody td {
+                display: block;
+                text-align: right;
+                padding: 0.5rem 1rem;
+                border-top: 1px solid #dee2e6;
+                position: relative;
+            }
+            
+            .table tbody td:before {
+                content: attr(data-label);
+                position: absolute;
+                left: 1rem;
+                width: 45%;
+                padding-right: 1rem;
+                text-align: left;
+                font-weight: 600;
+                color: #2c3e50;
+                text-transform: uppercase;
+                font-size: 0.8rem;
+            }
+            
+            .table tbody tr:first-child td {
+                border-top: 1px solid #dee2e6;
+            }
+            
+            .table tbody tr td:first-child {
+                border-top: none;
+            }
+            
+            .gap-1 {
+                flex-direction: column;
+                gap: 0.5rem;
+            }
+        }
+        
+        /* Animation for table rows */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .table tbody tr {
+            animation: fadeIn 0.3s ease;
+            animation-fill-mode: both;
+        }
+        
+        .table tbody tr:nth-child(1) { animation-delay: 0.1s; }
+        .table tbody tr:nth-child(2) { animation-delay: 0.2s; }
+        .table tbody tr:nth-child(3) { animation-delay: 0.3s; }
+        .table tbody tr:nth-child(4) { animation-delay: 0.4s; }
+        .table tbody tr:nth-child(5) { animation-delay: 0.5s; }
+        
+        /* Action buttons container */
+        .actions-container {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+        
+        /* Confirmation dialog enhancement */
+        .confirmation-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .confirmation-dialog {
+            background: white;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            width: 90%;
+        }
+    </style>
+</head>
+<body>
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2>Manage Missing Persons</h2>
+            <p class="text-muted mb-0">Review reports, update status, and remove resolved cases.</p>
+        </div>
+        <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary">
+            ← Back to Admin Dashboard
+        </a>
+    </div>
+
+    {% if persons %}
+    <div class="card">
+        <div class="card-header">
+            All Missing Person Reports ({{ persons|length }})
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Name</th>
+                            <th>Age</th>
+                            <th>Gender</th>
+                            <th>Last Seen</th>
+                            <th>Status</th>
+                            <th>Sightings</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for p in persons %}
+                        <tr>
+                            <td data-label="Name">
+                                <a href="{{ url_for('admin_missing_detail', person_id=p.id) }}" class="fw-bold">
+                                    {{ p.full_name }}
+                                </a>
+                            </td>
+                            <td data-label="Age">{{ p.age or '-' }}</td>
+                            <td data-label="Gender">{{ p.gender or '-' }}</td>
+                            <td data-label="Last Seen">
+                                {% if p.last_seen_date %}
+                                    {{ p.last_seen_date.strftime('%Y-%m-%d') }}
+                                {% else %}
+                                    -
+                                {% endif %}
+                                <br>
+                                <small class="text-muted">{{ p.last_location }}</small>
+                            </td>
+                            <td data-label="Status">
+                                <form method="POST" 
+                                      action="{{ url_for('admin_update_missing_status', person_id=p.id) }}" 
+                                      class="d-flex gap-1 status-form">
+                                    <select name="status" class="form-select form-select-sm status-select">
+                                        {% for s in status_choices %}
+                                            <option value="{{ s }}" 
+                                                    {% if p.status == s %}selected{% endif %}
+                                                    data-status="{{ s }}">
+                                                {{ s|capitalize }}
+                                            </option>
+                                        {% endfor %}
+                                    </select>
+                                    <button type="submit" class="btn btn-sm btn-primary update-btn">
+                                        Update
+                                    </button>
+                                </form>
+                            </td>
+                            <td data-label="Sightings">
+                                <span class="badge {% if p.sightings|length > 0 %}bg-info{% else %}bg-secondary{% endif %}">
+                                    {{ p.sightings|length }}
+                                </span>
+                            </td>
+                            <td data-label="Actions">
+                                <div class="actions-container">
+                                    <a href="{{ url_for('admin_missing_detail', person_id=p.id) }}" 
+                                       class="btn btn-sm btn-outline-primary" title="View Details">
+                                        👁️
+                                    </a>
+                                    <form method="POST"
+                                          action="{{ url_for('admin_delete_missing', person_id=p.id) }}"
+                                          class="delete-form"
+                                          onsubmit="return confirmDelete('{{ p.full_name }}');">
+                                        <button type="submit" class="btn btn-sm btn-danger" title="Delete">
+                                            🗑️
+                                        </button>
+                                    </form>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        <div class="d-flex align-items-center">
+            <div style="font-size: 1.5rem; margin-right: 1rem;">📭</div>
+            <div>
+                <strong>No reports found</strong><br>
+                No missing person reports have been submitted yet.
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Confirmation Dialog -->
+    <div id="confirmationOverlay" class="confirmation-overlay">
+        <div class="confirmation-dialog">
+            <h4 id="confirmationTitle" class="mb-3">Confirm Deletion</h4>
+            <p id="confirmationMessage" class="mb-4"></p>
+            <div class="d-flex justify-content-end gap-2">
+                <button id="cancelBtn" class="btn btn-outline-secondary">Cancel</button>
+                <button id="confirmBtn" class="btn btn-danger">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced delete confirmation
+        let currentForm = null;
+        
+        function confirmDelete(personName) {
+            const overlay = document.getElementById('confirmationOverlay');
+            const message = document.getElementById('confirmationMessage');
+            const title = document.getElementById('confirmationTitle');
+            
+            message.textContent = `Are you sure you want to delete the record for "${personName}"? This action cannot be undone.`;
+            overlay.style.display = 'flex';
+            
+            return false; // Prevent default form submission
+        }
+        
+        // Confirmation dialog handlers
+        document.getElementById('cancelBtn').addEventListener('click', function() {
+            document.getElementById('confirmationOverlay').style.display = 'none';
+            currentForm = null;
+        });
+        
+        document.getElementById('confirmBtn').addEventListener('click', function() {
+            if (currentForm) {
+                document.getElementById('confirmationOverlay').style.display = 'none';
+                currentForm.submit();
+            }
+        });
+        
+        // Set up delete form handlers
+        document.querySelectorAll('.delete-form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                currentForm = this;
+                const personName = this.closest('tr').querySelector('a.fw-bold').textContent.trim();
+                confirmDelete(personName);
+            });
+        });
+        
+        // Status update loading state
+        document.querySelectorAll('.status-form').forEach(form => {
+            form.addEventListener('submit', function(e) {
+                const button = this.querySelector('.update-btn');
+                const originalText = button.textContent;
+                
+                button.classList.add('loading');
+                button.disabled = true;
+                button.textContent = 'Updating...';
+                
+                // Revert after 3 seconds if still on page (form submission failed)
+                setTimeout(() => {
+                    button.classList.remove('loading');
+                    button.disabled = false;
+                    button.textContent = originalText;
+                }, 3000);
+            });
+        });
+        
+        // Status change visual feedback
+        document.querySelectorAll('.status-select').forEach(select => {
+            select.addEventListener('change', function() {
+                const selectedOption = this.options[this.selectedIndex];
+                const status = selectedOption.dataset.status;
+                
+                // Visual feedback based on status
+                this.style.borderColor = 
+                    status === 'active' ? '#28a745' :
+                    status === 'found' ? '#17a2b8' :
+                    status === 'closed' ? '#6c757d' : '#ced4da';
+                
+                // Add subtle animation
+                this.style.transform = 'scale(1.02)';
+                setTimeout(() => {
+                    this.style.transform = 'scale(1)';
+                }, 150);
+            });
+            
+            // Trigger initial styling
+            select.dispatchEvent(new Event('change'));
+        });
+        
+        // Table row click (excluding form clicks)
+        document.querySelectorAll('tbody tr').forEach(row => {
+            row.addEventListener('click', function(e) {
+                // Don't trigger if clicking on form elements
+                if (e.target.tagName === 'A' || 
+                    e.target.tagName === 'BUTTON' || 
+                    e.target.tagName === 'SELECT' ||
+                    e.target.closest('form') ||
+                    e.target.closest('a')) {
+                    return;
+                }
+                
+                const link = this.querySelector('a.fw-bold');
+                if (link) {
+                    link.style.transform = 'scale(1.05)';
+                    setTimeout(() => {
+                        link.style.transform = 'scale(1)';
+                        window.location.href = link.href;
+                    }, 150);
+                }
+            });
+            
+            // Add hover effect
+            row.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateX(5px)';
+                this.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.1)';
+            });
+            
+            row.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateX(0)';
+                this.style.boxShadow = 'none';
+            });
+        });
+        
+        // Auto-refresh every 30 seconds (optional)
+        // setTimeout(() => {
+        //     window.location.reload();
+        // }, 30000);
+        
+        // Add badge styles dynamically
+        const style = document.createElement('style');
+        style.textContent = `
+            .badge {
+                display: inline-block;
+                padding: 0.35em 0.65em;
+                font-size: 0.75em;
+                font-weight: 700;
+                line-height: 1;
+                text-align: center;
+                white-space: nowrap;
+                vertical-align: baseline;
+                border-radius: 50rem;
+                transition: all 0.3s ease;
+            }
+            .bg-info {
+                background-color: #17a2b8 !important;
+                color: white;
+            }
+            .bg-secondary {
+                background-color: #6c757d !important;
+                color: white;
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>
+{% endblock %}

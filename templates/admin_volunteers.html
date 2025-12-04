@@ -1,0 +1,297 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    /* Custom CSS for the volunteer applications page */
+    .card {
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        margin-bottom: 20px;
+    }
+    
+    .card-header {
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #e0e0e0;
+        padding: 15px 20px;
+        font-weight: 600;
+        color: #333;
+        font-size: 1.1rem;
+    }
+    
+    .card-body {
+        padding: 0;
+    }
+    
+    .table {
+        margin-bottom: 0;
+    }
+    
+    .table th {
+        font-weight: 600;
+        color: #495057;
+        border-bottom: 2px solid #dee2e6;
+        padding: 15px;
+        background-color: #f8f9fa;
+    }
+    
+    .table td {
+        padding: 15px;
+        vertical-align: middle;
+        border-bottom: 1px solid #eef0f2;
+    }
+    
+    .table tbody tr:hover {
+        background-color: #f8f9fa;
+    }
+    
+    .table tbody tr:last-child td {
+        border-bottom: none;
+    }
+    
+    .form-select-sm {
+        min-width: 120px;
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+    }
+    
+    .btn-sm {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.875rem;
+    }
+    
+    .btn-outline-secondary {
+        border-color: #6c757d;
+        color: #6c757d;
+        transition: all 0.2s ease;
+    }
+    
+    .btn-outline-secondary:hover {
+        background-color: #6c757d;
+        color: white;
+    }
+    
+    .btn-primary {
+        background-color: #0d6efd;
+        border-color: #0d6efd;
+        transition: all 0.2s ease;
+    }
+    
+    .btn-primary:hover {
+        background-color: #0b5ed7;
+        border-color: #0a58ca;
+    }
+    
+    .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+        transition: all 0.2s ease;
+    }
+    
+    .btn-danger:hover {
+        background-color: #bb2d3b;
+        border-color: #b02a37;
+    }
+    
+    .d-flex.gap-1 {
+        gap: 5px !important;
+    }
+    
+    .alert-info {
+        background-color: #d1ecf1;
+        border-color: #bee5eb;
+        color: #0c5460;
+        padding: 15px;
+        border-radius: 6px;
+        margin-top: 20px;
+    }
+    
+    .text-muted {
+        color: #6c757d !important;
+    }
+    
+    .table-responsive {
+        border-radius: 0 0 8px 8px;
+        overflow: hidden;
+    }
+    
+    .table-hover tbody tr {
+        transition: background-color 0.15s ease-in-out;
+    }
+    
+    .mb-4 {
+        margin-bottom: 1.5rem !important;
+    }
+    
+    .mb-0 {
+        margin-bottom: 0 !important;
+    }
+    
+    /* Mobile responsiveness */
+    @media (max-width: 768px) {
+        .table-responsive {
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+        }
+        
+        .d-flex.justify-content-between.align-items-center {
+            flex-direction: column;
+            align-items: flex-start !important;
+        }
+        
+        .d-flex.justify-content-between.align-items-center a.btn {
+            margin-top: 10px;
+            align-self: flex-start;
+        }
+        
+        .table th, .table td {
+            padding: 10px 8px;
+            font-size: 0.9rem;
+        }
+        
+        .form-select-sm {
+            min-width: 100px;
+        }
+    }
+    
+    /* Status badge styles */
+    option[value="pending"] {
+        color: #ffc107;
+    }
+    
+    option[value="approved"] {
+        color: #198754;
+    }
+    
+    option[value="rejected"] {
+        color: #dc3545;
+    }
+    
+    option[value="deployed"] {
+        color: #0d6efd;
+    }
+    
+    /* Loading state for form submission */
+    .btn:disabled {
+        opacity: 0.65;
+        cursor: not-allowed;
+    }
+</style>
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+        <h2>Volunteer Applications</h2>
+        <p class="text-muted mb-0">Review and approve volunteers before deployment.</p>
+    </div>
+    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary">
+        Back to Admin Dashboard
+    </a>
+</div>
+
+{% if volunteers %}
+<div class="card">
+    <div class="card-header">
+        All Volunteers ({{ volunteers|length }})
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Phone</th>
+                        <th>Role / Interests</th>
+                        <th>Location</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for v in volunteers %}
+                    <tr>
+                        <td>{{ v.full_name }}</td>
+                        <td>{{ v.email }}</td>
+                        <td>{{ v.phone }}</td>
+                        <td>
+                            {% if v.role_applied %}
+                                <strong>{{ v.role_applied }}</strong>
+                            {% else %}
+                                {{ v.interests or '-' }}
+                            {% endif %}
+                        </td>
+                        <td>{{ v.location or '-' }}</td>
+                        <td>
+                            <form method="POST" action="{{ url_for('admin_update_volunteer_status', vol_id=v.id) }}" class="d-flex gap-1">
+                                <select name="status" class="form-select form-select-sm">
+                                    {% for s in status_choices %}
+                                        <option value="{{ s }}" {% if v.status == s %}selected{% endif %}>{{ s|capitalize }}</option>
+                                    {% endfor %}
+                                </select>
+                                <button type="submit" class="btn btn-sm btn-primary">Update</button>
+                            </form>
+                        </td>
+                        <td>
+                            <form method="POST"
+                                  action="{{ url_for('admin_delete_volunteer', vol_id=v.id) }}"
+                                  onsubmit="return confirm('Delete volunteer {{ v.full_name }}?');">
+                                <button type="submit" class="btn btn-sm btn-danger">
+                                    Delete
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% else %}
+<div class="alert alert-info">
+    No volunteer applications yet.
+</div>
+{% endif %}
+
+<script>
+    // Add loading state to form submissions
+    document.addEventListener('DOMContentLoaded', function() {
+        const forms = document.querySelectorAll('form');
+        
+        forms.forEach(form => {
+            form.addEventListener('submit', function() {
+                const submitButton = this.querySelector('button[type="submit"]');
+                if (submitButton) {
+                    submitButton.disabled = true;
+                    submitButton.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing...';
+                }
+            });
+        });
+        
+        // Add visual feedback for status changes
+        const statusSelects = document.querySelectorAll('select[name="status"]');
+        statusSelects.forEach(select => {
+            select.addEventListener('change', function() {
+                const currentValue = this.value;
+                const form = this.closest('form');
+                const updateButton = form.querySelector('button[type="submit"]');
+                
+                // Add a small visual indicator that status has changed
+                if (this.dataset.originalValue !== currentValue) {
+                    updateButton.classList.add('btn-warning');
+                    updateButton.classList.remove('btn-primary');
+                    updateButton.textContent = 'Update*';
+                } else {
+                    updateButton.classList.remove('btn-warning');
+                    updateButton.classList.add('btn-primary');
+                    updateButton.textContent = 'Update';
+                }
+            });
+            
+            // Store original value on page load
+            select.dataset.originalValue = select.value;
+        });
+    });
+</script>
+
+{% endblock %}

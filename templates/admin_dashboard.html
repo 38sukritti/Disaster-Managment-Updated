@@ -90,11 +90,19 @@
             <div class="d-flex justify-content-between align-items-center">
                 <div>
                     <h2><i class="bi bi-shield-exclamation"></i> Admin Dashboard</h2>
-                    <p class="text-muted mb-0">Manage emergency alerts and registered users</p>
+                    <p class="text-muted mb-0">Manage emergency alerts, missing persons, and registered users</p>
                 </div>
-                <a href="/admin/logout" class="btn btn-outline-secondary">
-                    <i class="bi bi-box-arrow-right"></i> Logout
-                </a>
+                <div class="d-flex gap-2">
+                    <a href="{{ url_for('admin_missing') }}" class="btn btn-outline-primary">
+                        <i class="bi bi-person-search"></i> Missing Persons
+                    </a>
+                    <a href="{{ url_for('admin_volunteers') }}" class="btn btn-outline-primary">
+                        <i class="bi bi-people"></i> Volunteers
+                    </a>
+                    <a href="/admin/logout" class="btn btn-outline-secondary">
+                        <i class="bi bi-box-arrow-right"></i> Logout
+                    </a>
+                </div>
             </div>
         </div>
     </div>
