@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Manage Reports - Admin</title>
+    <style>
+        body { font-family: Arial; background: #f1f5f9; padding: 40px; }
+        h2 { text-align: center; color: #1e293b; }
+
+        table {
+            width: 100%;
+            background: white;
+            border-collapse: collapse;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        th, td {
+            padding: 15px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th { background: #1e293b; color: white; }
+        tr:hover { background: #f8fafc; }
+
+        .btn-edit {
+            padding: 6px 12px;
+            background: #3b82f6;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+        }
+
+        .btn-delete {
+            padding: 6px 12px;
+            background: #dc2626;
+            color: white;
+            border-radius: 6px;
+            border: none;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .back-btn {
+            padding: 8px 14px;
+            background: gray;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="top-bar">
+    <a class="back-btn" href="/admin/dashboard">← Back to Dashboard</a>
+</div>
+
+<h2>All Disaster Reports</h2>
+
+<table>
+    <tr>
+        <th>Title</th>
+        <th>Severity</th>
+        <th>Affected Areas</th>
+        <th>Reported By</th>
+        <th>Created At</th>
+        <th>Actions</th>
+    </tr>
+
+    {% for r in reports %}
+    <tr>
+        <td>{{ r.title }}</td>
+        <td>{{ r.severity }}</td>
+        <td>{{ r.affected_areas }}</td>
+        <td>{{ r.reported_by }}</td>
+        <td>{{ r.created_at[:10] }}</td>
+
+        <td>
+            <a class="btn-edit" href="{{ url_for('admin_edit_report', report_id=r.id) }}">Edit</a>
+
+            <form method="POST"
+                  action="{{ url_for('admin_delete_report', report_id=r.id) }}"
+                  style="display:inline;">
+                <button class="btn-delete">Delete</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+</body>
+</html>

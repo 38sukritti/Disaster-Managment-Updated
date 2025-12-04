@@ -1300,7 +1300,7 @@ img {
                 <div class="hero-buttons">
                     <a href="{{url_for('user')}}" class="btn btn-primary">Get Emergency Alerts</a>
                     <a href="{{url_for('contacts')}}" class="btn btn-secondary">List of emergency contacts</a>
-                    <a href="#" class="btn btn-alert">Report a Disaster</a>
+                    <a href="{{ url_for('gov_login', next='/gov/report') }}" class="btn btn-alert">Report a Disaster</a>
                 </div>
             </div>
         </div>

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Report</title>
+
+    <style>
+        body {
+            background: #f1f5f9;
+            font-family: 'Inter', sans-serif;
+        }
+        header {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        .container {
+            max-width: 700px;
+            margin: 2rem auto;
+            background: white;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            border-radius: 10px;
+        }
+        input, select, textarea {
+            width:100%;
+            padding:10px;
+            margin-bottom:1rem;
+        }
+        .btn {
+            padding:10px 15px;
+            border:none;
+            background:#3b82f6;
+            color:white;
+            border-radius:8px;
+            font-weight:600;
+        }
+    </style>
+</head>
+
+<body>
+<header>
+    <h1>Edit Report</h1>
+</header>
+
+<div class="container">
+
+    <form method="POST">
+
+        <label>Name</label>
+        <input type="text" name="reporter_name" value="{{ report.reporter_name }}" required>
+
+        <label>Email</label>
+        <input type="email" name="reporter_email" value="{{ report.reporter_email }}" required>
+
+        <label>Disaster Type</label>
+        <select name="disaster_type" required>
+            <option value="{{ report.disaster_type }}" selected>{{ report.disaster_type }}</option>
+            <option value="Flood">Flood</option>
+            <option value="Earthquake">Earthquake</option>
+            <option value="Cyclone">Cyclone</option>
+            <option value="Wildfire">Wildfire</option>
+            <option value="Heat Wave">Heat Wave</option>
+            <option value="Landslide">Landslide</option>
+        </select>
+
+        <label>Location</label>
+        <input type="text" name="location" value="{{ report.location }}" required>
+
+        <label>Severity</label>
+        <select name="severity" required>
+            <option selected>{{ report.severity }}</option>
+            <option value="LOW">LOW</option>
+            <option value="MEDIUM">MEDIUM</option>
+            <option value="HIGH">HIGH</option>
+            <option value="CRITICAL">CRITICAL</option>
+        </select>
+
+        <label>Description</label>
+        <textarea name="description" required>{{ report.description }}</textarea>
+
+        <button type="submit" class="btn">Update</button>
+
+    </form>
+
+</div>
+</body>
+</html>

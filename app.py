@@ -266,9 +266,32 @@ def init_db():
                     timestamp DATETIME DEFAULT CURRENT_TIMESTAMP,
                     status TEXT DEFAULT 'active'
                 )''')
+        # new govs table (government officers that can add/edit reports)
+        c.execute('''CREATE TABLE IF NOT EXISTS govs (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    username TEXT UNIQUE,
+                    password TEXT
+                )''')
+        # new disaster reports table
+        c.execute('''CREATE TABLE IF NOT EXISTS disaster_reports (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    title TEXT,
+                    severity TEXT,
+                    affected_areas TEXT,
+                    timeframe TEXT,
+                    advisory TEXT,
+                    reported_by TEXT,
+                    created_at TEXT
+                )''')
         try:
             c.execute("INSERT INTO admins (username, password) VALUES (?, ?)", 
                      ('admin', generate_password_hash('admin123')))
+        except sqlite3.IntegrityError:
+            pass
+        # ensure one sample gov user (change creds in production)
+        try:
+            c.execute("INSERT INTO govs (username, password) VALUES (?, ?)",
+                      ('govuser', generate_password_hash('govpass123')))
         except sqlite3.IntegrityError:
             pass
         conn.commit()
@@ -1105,6 +1128,268 @@ def apply_role():
         flash('There was an error submitting your application. Please try again.', 'error')
 
     return redirect(url_for('missing'))
+
+# ---------------------------
+# Admin: Reports CRUD
+# ---------------------------
+@app.route('/admin/reports')
+def admin_reports():
+    if not session.get('admin_logged_in'):
+        return redirect(url_for('admin_login'))
+
+    with get_db() as conn:
+        reports = conn.execute(
+            "SELECT * FROM disaster_reports ORDER BY created_at DESC"
+        ).fetchall()
+
+    return render_template('admin_reports.html', reports=reports)
+
+
+@app.route('/admin/view_report/<int:report_id>')
+def admin_view_report(report_id):
+    if not session.get('admin_logged_in'):
+        return redirect(url_for('admin_login'))
+
+    with get_db() as conn:
+        report = conn.execute("SELECT * FROM disaster_reports WHERE id=?", (report_id,)).fetchone()
+
+    return render_template('view_report.html', report=report)
+
+@app.route('/admin/edit_report/<int:report_id>', methods=['GET', 'POST'])
+def admin_edit_report(report_id):
+    if not session.get('admin_logged_in'):
+        return redirect(url_for('admin_login'))
+
+    with get_db() as conn:
+        report = conn.execute(
+            "SELECT * FROM disaster_reports WHERE id = ?", (report_id,)
+        ).fetchone()
+
+        if not report:
+            flash("Report not found.", "error")
+            return redirect(url_for('admin_reports'))
+
+        if request.method == 'POST':
+            title = request.form.get('title')
+            severity = request.form.get('severity')
+            affected = request.form.get('affected_areas')
+            timeframe = request.form.get('timeframe')
+            advisory = request.form.get('advisory')
+
+            conn.execute("""
+                UPDATE disaster_reports
+                SET title=?, severity=?, affected_areas=?, timeframe=?, advisory=?
+                WHERE id=?
+            """, (title, severity, affected, timeframe, advisory, report_id))
+
+            conn.commit()
+            flash("Report updated!", "success")
+            return redirect(url_for('admin_reports'))
+
+    return render_template('admin_edit_report.html', report=report)
+
+
+@app.route('/admin/delete_report/<int:report_id>', methods=['POST'])
+def admin_delete_report(report_id):
+    if not session.get('admin_logged_in'):
+        return redirect(url_for('admin_login'))
+
+    with get_db() as conn:
+        conn.execute("DELETE FROM disaster_reports WHERE id=?", (report_id,))
+        conn.commit()
+
+    flash("Report deleted.", "success")
+    return redirect(url_for('admin_reports'))
+
+
+# ---------------------------
+# Gov login + report flow
+# ---------------------------
+@app.route('/gov/login', methods=['GET', 'POST'])
+def gov_login():
+    # This is separate from admin. Gov users can add/edit reports (but cannot delete)
+    if request.method == 'POST':
+        username = request.form.get('username')
+        password = request.form.get('password')
+        with get_db() as conn:
+            gov = conn.execute("SELECT * FROM govs WHERE username = ?", (username,)).fetchone()
+        if gov and check_password_hash(gov['password'], password):
+            session['gov_logged_in'] = True
+            session['gov_username'] = username
+            # If there is a 'next' param, redirect there
+            next_url = request.args.get('next') or url_for('gov_report_form')
+            return redirect(next_url)
+        else:
+            return render_template('gov_login.html', error="Invalid government credentials!")
+    # GET
+    return render_template('gov_login.html')
+
+@app.route('/gov/logout')
+def gov_logout():
+    session.pop('gov_logged_in', None)
+    session.pop('gov_username', None)
+    return redirect(url_for('home'))
+
+@app.route('/gov/reports')
+def gov_reports():
+    if not session.get('gov_logged_in'):
+        return redirect(url_for('gov_login'))
+
+    username = session['gov_username']
+
+    with get_db() as conn:
+        reports = conn.execute(
+            "SELECT * FROM disaster_reports WHERE reported_by = ? ORDER BY created_at DESC",
+            (username,)
+        ).fetchall()
+
+    return render_template('gov_reports.html', reports=reports)
+
+@app.route('/gov/delete_report/<int:report_id>', methods=['POST'])
+def gov_delete_report(report_id):
+    if not session.get('gov_logged_in'):
+        return redirect(url_for('gov_login'))
+
+    username = session['gov_username']
+
+    with get_db() as conn:
+        # Ensure gov only deletes their own report
+        report = conn.execute(
+            "SELECT reported_by FROM disaster_reports WHERE id = ?", (report_id,)
+        ).fetchone()
+
+        if report and report['reported_by'] == username:
+            conn.execute("DELETE FROM disaster_reports WHERE id=?", (report_id,))
+            conn.commit()
+            flash("Report deleted successfully.", "success")
+        else:
+            flash("You can delete only your own reports.", "error")
+
+    return redirect(url_for('gov_reports'))
+
+@app.route('/gov/edit_report/<int:report_id>', methods=['GET', 'POST'])
+def gov_edit_report(report_id):
+    if not session.get('gov_logged_in'):
+        return redirect(url_for('gov_login'))
+
+    username = session['gov_username']
+
+    with get_db() as conn:
+        # Fetch the report
+        report = conn.execute(
+            "SELECT * FROM disaster_reports WHERE id = ?", (report_id,)
+        ).fetchone()
+
+        # Check permission
+        if not report or report['reported_by'] != username:
+            flash("You are not allowed to edit this report.", "error")
+            return redirect(url_for('gov_reports'))
+
+        # On POST: update
+        if request.method == 'POST':
+            title = request.form.get('title')
+            severity = request.form.get('severity')
+            affected = request.form.get('affected_areas')
+            timeframe = request.form.get('timeframe')
+            advisory = request.form.get('advisory')
+
+            conn.execute("""
+                UPDATE disaster_reports
+                SET title = ?, severity = ?, affected_areas = ?, timeframe = ?, advisory = ?
+                WHERE id = ?
+            """, (title, severity, affected, timeframe, advisory, report_id))
+            conn.commit()
+
+            flash("Report updated successfully!", "success")
+            return redirect(url_for('gov_reports'))
+
+    return render_template('gov_edit_report.html', report=report)
+
+
+@app.route('/gov/report', methods=['GET', 'POST'])
+def gov_report_form():
+    # Only gov users can access report form
+    if not session.get('gov_logged_in'):
+        # redirect to gov login with next param so after login they return here
+        return redirect(url_for('gov_login', next=url_for('gov_report_form')))
+    if request.method == 'POST':
+        title = request.form.get('title')
+        severity = request.form.get('severity') or 'LOW'
+        affected_areas = request.form.get('affected_areas')
+        timeframe = request.form.get('timeframe')
+        advisory = request.form.get('advisory')
+        reported_by = session.get('gov_username', 'gov')
+        created_at = datetime.utcnow().isoformat()
+
+        if not title or not affected_areas or not advisory:
+            flash("Please fill required fields (title, affected areas, advisory).", "error")
+            return render_template('report_disaster.html')
+
+        with get_db() as conn:
+            conn.execute("""INSERT INTO disaster_reports
+                            (title, severity, affected_areas, timeframe, advisory, reported_by, created_at)
+                            VALUES (?, ?, ?, ?, ?, ?, ?)""",
+                         (title, severity, affected_areas, timeframe, advisory, reported_by, created_at))
+            conn.commit()
+
+            # Optionally: notify users in affected location
+            # We'll find users whose location matches any substring in affected_areas (simple approach)
+            notified = 0
+            try:
+                location_query = affected_areas.split(',')[0].strip()  # crude: take first area
+                target_users = conn.execute("SELECT email FROM users WHERE location LIKE ?", (f"%{location_query}%",)).fetchall()
+                for u in target_users:
+                    if send_alert_email(u['email'], location_query, advisory):
+                        notified += 1
+            except Exception as e:
+                print("Notification error:", e)
+
+        flash("Report added successfully. Users notified: {}".format(notified), "success")
+        return redirect(url_for('home'))
+
+    # GET -> show form
+    return render_template('report_disaster.html')
+
+# Update user route to show disaster reports
+@app.route('/user')
+def user():
+    with get_db() as conn:
+        alerts = conn.execute("SELECT * FROM disaster_reports ORDER BY created_at DESC").fetchall()
+    return render_template('user.html', alerts=alerts)
+
+# Add edit report route for regular users
+@app.route('/edit_report/<int:report_id>', methods=['GET', 'POST'])
+def edit_report(report_id):
+    # This route is for regular users to edit their disaster reports
+    with get_db() as conn:
+        report = conn.execute(
+            "SELECT * FROM disaster_reports WHERE id = ?", (report_id,)
+        ).fetchone()
+
+        if not report:
+            flash("Report not found.", "error")
+            return redirect(url_for('user'))
+
+        if request.method == 'POST':
+            reporter_name = request.form.get('reporter_name')
+            reporter_email = request.form.get('reporter_email')
+            disaster_type = request.form.get('disaster_type')
+            location = request.form.get('location')
+            severity = request.form.get('severity')
+            description = request.form.get('description')
+
+            # For this simplified version, we'll update the basic fields
+            conn.execute("""
+                UPDATE disaster_reports
+                SET title = ?, severity = ?, affected_areas = ?, advisory = ?
+                WHERE id = ?
+            """, (f"{disaster_type} in {location}", severity, location, description, report_id))
+
+            conn.commit()
+            flash("Report updated successfully!", "success")
+            return redirect(url_for('user'))
+
+    return render_template('edit_report.html', report=report)
 
 if __name__ == '__main__':
     app.run(debug=True)

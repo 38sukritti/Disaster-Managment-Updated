@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h2>Disaster Report Details</h2>
+
+<p><strong>Title:</strong> {{ report['title'] }}</p>
+<p><strong>Severity:</strong> {{ report['severity'] }}</p>
+<p><strong>Affected Areas:</strong> {{ report['affected_areas'] }}</p>
+<p><strong>Timeframe:</strong> {{ report['timeframe'] }}</p>
+<p><strong>Advisory:</strong> {{ report['advisory'] }}</p>
+<p><strong>Reported By:</strong> {{ report['reported_by'] }}</p>
+<p><strong>Created At:</strong> {{ report['created_at'] }}</p>
+
+<br>
+<a href="{{ url_for('admin_reports') }}">Back</a>
+
+</body>
+</html>

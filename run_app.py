@@ -1,80 +1,90 @@
 #!/usr/bin/env python3
 """
-Quick setup and run script for the disaster management app
+Simple startup script for the Disaster Management System
+This handles common startup issues and provides better error messages
 """
-import os
-import subprocess
+
 import sys
+import os
+import traceback
 
-def install_requirements():
-    """Install minimal requirements"""
-    print("Installing requirements...")
-    try:
-        subprocess.check_call([sys.executable, "-m", "pip", "install", "-r", "requirements_simple.txt"])
-        print("✅ Requirements installed!")
-        return True
-    except:
-        print("❌ Error installing requirements")
-        return False
-
-def setup_env():
-    """Setup environment file"""
-    if not os.path.exists('.env'):
-        with open('.env', 'w') as f:
-            f.write('GROQ_API_KEY=your_groq_api_key_here\n')
-        print("📝 Created .env file - please add your Groq API key")
+def check_dependencies():
+    """Check if all required packages are installed"""
+    required_packages = [
+        'flask',
+        'flask_sqlalchemy', 
+        'pydantic',
+        'requests',
+        'werkzeug'
+    ]
+    
+    missing = []
+    for package in required_packages:
+        try:
+            __import__(package)
+        except ImportError:
+            missing.append(package)
+    
+    if missing:
+        print(f"❌ Missing packages: {', '.join(missing)}")
+        print("Run: pip install flask flask-sqlalchemy pydantic requests")
         return False
     
-    with open('.env', 'r') as f:
-        if 'your_groq_api_key_here' in f.read():
-            print("⚠️  Please update GROQ_API_KEY in .env file")
-            print("Get key from: https://console.groq.com/")
-            return False
-    
-    print("✅ Environment configured!")
+    print("✅ All required packages found")
     return True
 
-def run_app():
-    """Run the Flask app"""
-    print("🚀 Starting the app...")
-    os.system("python app.py")
+def setup_environment():
+    """Setup basic environment"""
+    # Create necessary directories
+    os.makedirs('static/uploads', exist_ok=True)
+    os.makedirs('instance', exist_ok=True)
+    print("✅ Directories created")
 
-def test_pydantic_models():
-    """Test Pydantic models"""
-    print("Testing Pydantic models...")
-    try:
-        result = subprocess.run([sys.executable, "test_models.py"], 
-                              capture_output=True, text=True, timeout=30)
-        if result.returncode == 0:
-            print("✅ Pydantic models working correctly!")
-            return True
-        else:
-            print(f"❌ Pydantic model tests failed")
-            return False
-    except Exception as e:
-        print(f"❌ Error testing models: {e}")
-        return False
-
-if __name__ == "__main__":
-    print("🤖 Disaster Management AI Chatbot with Pydantic Setup")
-    print("=" * 55)
+def main():
+    print("🚀 Starting Disaster Management System...")
+    print("=" * 50)
     
-    if install_requirements():
-        models_ok = test_pydantic_models()
-        env_ready = setup_env()
+    # Check dependencies
+    if not check_dependencies():
+        sys.exit(1)
+    
+    # Setup environment
+    setup_environment()
+    
+    try:
+        # Import and run the app
+        print("📦 Loading application...")
+        from app import app
         
-        if env_ready and models_ok:
-            print("\n🎉 All systems ready!")
-            print("Commands available:")
-            print("  python app.py        - Start the application")
-            print("  python test_models.py - Test Pydantic validation")
-            print("  python test_api.py   - Test API endpoints")
-            run_app()
-        else:
-            print("\n📋 Next steps:")
-            if not env_ready:
-                print("1. Get API key: https://console.groq.com/")
-                print("2. Update .env file with your key")
-            if not models_ok:
-                print("3. Fix Pydantic model issues")
-            print("4. Run: python run_app.py")
+        print("🗄️  Initializing database...")
+        # Database should be initialized in app.py
+        
+        print("🌐 Starting web server...")
+        print("=" * 50)
+        print("✅ Server running at: http://localhost:5000")
+        print("📋 Default credentials:")
+        print("   Admin: admin / admin123")
+        print("   Government: govuser / govpass123")
+        print("=" * 50)
+        
+        # Run the app
+        app.run(
+            host='0.0.0.0',
+            port=5000,
+            debug=True,
+            use_reloader=False  # Prevent double startup
+        )
+        
+    except ImportError as e:
+        print(f"❌ Import Error: {e}")
+        print("Check if all files are in the correct location")
+        traceback.print_exc()
+        
+    except Exception as e:
+        print(f"❌ Startup Error: {e}")
+        traceback.print_exc()
+        
+    input("\nPress Enter to exit...")
+
+if __name__ == '__main__':
+    main()

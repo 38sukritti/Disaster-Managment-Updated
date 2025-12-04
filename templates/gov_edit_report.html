@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Edit Report</title>
+    <style>
+        body { font-family: Arial; background: #f0f2f5; padding: 30px; }
+        .form-container {
+            background: white; padding: 25px; border-radius: 10px;
+            max-width: 600px; margin: auto; box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        label { font-weight: bold; display: block; margin-top: 15px; }
+        input, textarea, select {
+            width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc;
+        }
+        button {
+            margin-top: 20px; width: 100%; padding: 10px;
+            background: #3b82f6; color: white; border: none; border-radius: 6px;
+        }
+        button:hover { background: #2563eb; }
+    </style>
+</head>
+<body>
+
+<div class="form-container">
+    <h2>Edit Report</h2>
+
+    <form method="POST">
+        <label>Title</label>
+        <input type="text" name="title" value="{{ report['title'] }}" required>
+
+        <label>Severity</label>
+        <select name="severity">
+            <option {{ 'selected' if report['severity']=='LOW' }}>LOW</option>
+            <option {{ 'selected' if report['severity']=='MEDIUM' }}>MEDIUM</option>
+            <option {{ 'selected' if report['severity']=='HIGH' }}>HIGH</option>
+            <option {{ 'selected' if report['severity']=='CRITICAL' }}>CRITICAL</option>
+        </select>
+
+        <label>Affected Areas</label>
+        <textarea name="affected_areas" required>{{ report['affected_areas'] }}</textarea>
+
+        <label>Timeframe</label>
+        <input type="text" name="timeframe" value="{{ report['timeframe'] }}">
+
+        <label>Advisory</label>
+        <textarea name="advisory" required>{{ report['advisory'] }}</textarea>
+
+        <button type="submit">Save Changes</button>
+    </form>
+</div>
+
+</body>
+</html>
