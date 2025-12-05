@@ -2,6 +2,22 @@
 
 {% block content %}
 <style>
+    body {
+        background: #FDF5E6;
+        color: var(--dark);
+        padding-top: 70px;
+    }
+    
+    /* Override navbar issues */
+    .header {
+        height: 60px !important;
+    }
+    
+    .header .container-nav {
+        height: 100% !important;
+        padding: 0 1rem !important;
+    }
+    
     /* Custom CSS for the volunteer applications page */
     .card {
         border: 1px solid #e0e0e0;
@@ -11,11 +27,11 @@
     }
     
     .card-header {
-        background-color: #f8f9fa;
-        border-bottom: 1px solid #e0e0e0;
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        border-bottom: 1px solid var(--tan-beige);
         padding: 15px 20px;
         font-weight: 600;
-        color: #333;
+        color: white;
         font-size: 1.1rem;
     }
     
@@ -29,10 +45,10 @@
     
     .table th {
         font-weight: 600;
-        color: #495057;
-        border-bottom: 2px solid #dee2e6;
+        color: var(--dark);
+        border-bottom: 2px solid var(--tan-beige);
         padding: 15px;
-        background-color: #f8f9fa;
+        background: linear-gradient(135deg, var(--wheat-light) 0%, var(--tan-beige) 100%);
     }
     
     .table td {
@@ -42,7 +58,7 @@
     }
     
     .table tbody tr:hover {
-        background-color: #f8f9fa;
+        background-color: rgba(139, 69, 19, 0.05);
     }
     
     .table tbody tr:last-child td {
@@ -61,36 +77,49 @@
     }
     
     .btn-outline-secondary {
-        border-color: #6c757d;
-        color: #6c757d;
+        border-color: var(--rustic-brown);
+        color: var(--rustic-brown);
         transition: all 0.2s ease;
     }
     
     .btn-outline-secondary:hover {
-        background-color: #6c757d;
-        color: white;
+        background-color: var(--rustic-brown) !important;
+        border-color: var(--rustic-brown) !important;
+        color: white !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(139, 69, 19, 0.3);
     }
     
     .btn-primary {
-        background-color: #0d6efd;
-        border-color: #0d6efd;
+        background: linear-gradient(135deg, var(--olive-green) 0%, var(--dark-olive) 100%);
+        border-color: var(--olive-green);
         transition: all 0.2s ease;
+        color: white !important;
+        box-shadow: 0 2px 8px rgba(107, 142, 35, 0.2);
     }
     
     .btn-primary:hover {
-        background-color: #0b5ed7;
-        border-color: #0a58ca;
+        background: linear-gradient(135deg, var(--dark-olive) 0%, #3E4A1F 100%) !important;
+        border-color: var(--dark-olive) !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(107, 142, 35, 0.3);
+        color: white !important;
     }
     
     .btn-danger {
-        background-color: #dc3545;
-        border-color: #dc3545;
+        background: linear-gradient(135deg, #CD853F 0%, #A0522D 100%);
+        border-color: #CD853F;
         transition: all 0.2s ease;
+        color: white !important;
+        box-shadow: 0 2px 8px rgba(205, 133, 63, 0.2);
     }
     
     .btn-danger:hover {
-        background-color: #bb2d3b;
-        border-color: #b02a37;
+        background: linear-gradient(135deg, #A0522D 0%, #8B4513 100%) !important;
+        border-color: #A0522D !important;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(205, 133, 63, 0.3);
+        color: white !important;
     }
     
     .d-flex.gap-1 {
@@ -98,9 +127,9 @@
     }
     
     .alert-info {
-        background-color: #d1ecf1;
-        border-color: #bee5eb;
-        color: #0c5460;
+        background-color: rgba(107, 142, 35, 0.1);
+        border-color: var(--secondary);
+        color: var(--dark-olive);
         padding: 15px;
         border-radius: 6px;
         margin-top: 20px;

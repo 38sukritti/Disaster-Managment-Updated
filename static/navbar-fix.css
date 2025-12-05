@@ -1,0 +1,130 @@
+/* Complete Navbar Fix */
+.header {
+    background: linear-gradient(135deg, rgba(245, 222, 179, 0.95) 0%, rgba(210, 180, 140, 0.95) 100%);
+    backdrop-filter: blur(10px);
+    box-shadow: 0 8px 32px rgba(139, 69, 19, 0.2);
+    position: fixed;
+    width: 100%;
+    top: 0;
+    z-index: 1000;
+    border-bottom: 2px solid rgba(139, 69, 19, 0.3);
+    height: 60px;
+}
+
+.header .container-nav {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--dark);
+    text-decoration: none;
+    flex-shrink: 0;
+}
+
+.logo i {
+    margin-right: 0.5rem;
+    color: var(--rustic-brown);
+    font-size: 1.6rem;
+}
+
+.nav {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    margin: 0 1rem;
+}
+
+.nav ul {
+    display: flex;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    gap: 0.3rem;
+    align-items: center;
+}
+
+.nav ul li a {
+    color: var(--dark);
+    font-weight: 500;
+    text-decoration: none;
+    padding: 0.4rem 0.7rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    white-space: nowrap;
+    transition: all 0.3s ease;
+    background: rgba(139, 69, 19, 0.1);
+}
+
+.nav ul li a:hover {
+    background: var(--rustic-brown);
+    color: white;
+}
+
+.nav-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.sos-nav-button {
+    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    padding: 0.4rem 0.8rem;
+    font-weight: 700;
+    cursor: pointer;
+    font-size: 0.75rem;
+    white-space: nowrap;
+    flex-shrink: 0;
+}
+
+.profile-menu {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.initials {
+    width: 28px;
+    height: 28px;
+    background: var(--rustic-brown);
+    border-radius: 50%;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    cursor: pointer;
+    font-size: 11px;
+}
+
+@media (max-width: 768px) {
+    .nav {
+        display: none;
+    }
+    
+    .mobile-menu {
+        display: block;
+        font-size: 1.2rem;
+        cursor: pointer;
+        color: var(--dark);
+        padding: 0.3rem;
+    }
+    
+    .sos-nav-button span {
+        display: none;
+    }
+}

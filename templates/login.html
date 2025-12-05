@@ -1,43 +1,48 @@
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - Alert System</title>
-    <style>
-        /* Reset and Base Styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+{% extends "base.html" %}
+{% block content %}
+<style>
+        /* Rustic Color Theme Variables */
+        :root {
+            --rustic-brown: #8B4513;
+            --rustic-brown-dark: #654321;
+            --tan-beige: #D2B48C;
+            --wheat-light: #F5DEB3;
+            --olive-green: #6B8E23;
+            --dark-olive: #556B2F;
+            --primary: var(--rustic-brown);
+            --primary-dark: var(--rustic-brown-dark);
+            --secondary: var(--olive-green);
+            --dark: #3E2723;
+            --light: var(--wheat-light);
         }
         
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            font-family: 'Poppins', sans-serif;
             line-height: 1.6;
-            color: #333;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: var(--dark);
+            background: #FDF5E6;
         }
         
         /* Auth Wrapper */
         .auth-wrapper {
-            min-height: 100vh;
+            min-height: calc(100vh - 100px);
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             padding: 20px;
+            margin-top: 100px;
+            background: linear-gradient(135deg, var(--wheat-light) 0%, var(--tan-beige) 100%);
         }
         
         /* Title */
         .auth-title {
-            color: #2c3e50;
+            color: var(--dark);
             font-size: 2.5rem;
-            font-weight: 600;
+            font-weight: 700;
             margin-bottom: 2rem;
             text-align: center;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+            text-shadow: 2px 2px 4px rgba(139, 69, 19, 0.2);
         }
         
         /* Grid Layout */
@@ -79,7 +84,7 @@
         }
         
         .auth-card h3 {
-            color: #2c3e50;
+            color: var(--dark);
             font-size: 1.75rem;
             margin-bottom: 0.75rem;
             font-weight: 600;
@@ -94,8 +99,8 @@
         
         /* Form Elements */
         .form-label {
-            color: #2c3e50;
-            font-weight: 500;
+            color: var(--dark);
+            font-weight: 600;
             margin-bottom: 0.5rem;
             display: block;
         }
@@ -103,17 +108,18 @@
         .form-control {
             width: 100%;
             padding: 12px 16px;
-            border: 2px solid #e1e8ed;
+            border: 2px solid var(--tan-beige);
             border-radius: 10px;
             font-size: 1rem;
             transition: all 0.3s ease;
-            background: #f8f9fa;
+            background: var(--wheat-light);
+            color: var(--dark);
         }
         
         .form-control:focus {
             outline: none;
-            border-color: #3498db;
-            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.1);
             background: white;
         }
         
@@ -168,25 +174,27 @@
         }
         
         .btn-primary {
-            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
+            box-shadow: 0 4px 15px rgba(139, 69, 19, 0.3);
         }
         
         .btn-primary:hover {
-            background: linear-gradient(135deg, #2980b9 0%, #1f639e 100%);
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--dark) 100%);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+            box-shadow: 0 6px 20px rgba(139, 69, 19, 0.4);
         }
         
         .btn-secondary {
-            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--dark-olive) 100%);
             color: white;
+            box-shadow: 0 4px 15px rgba(107, 142, 35, 0.3);
         }
         
         .btn-secondary:hover {
-            background: linear-gradient(135deg, #27ae60 0%, #219653 100%);
+            background: linear-gradient(135deg, var(--dark-olive) 0%, #3E4A1F 100%);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
+            box-shadow: 0 6px 20px rgba(107, 142, 35, 0.4);
         }
         
         .btn:active {
@@ -236,14 +244,14 @@
         }
         
         .auth-note a {
-            color: #3498db;
+            color: var(--secondary);
             text-decoration: none;
             font-weight: 600;
             transition: color 0.3s ease;
         }
         
         .auth-note a:hover {
-            color: #2980b9;
+            color: var(--dark-olive);
             text-decoration: underline;
         }
         
@@ -254,20 +262,20 @@
         
         /* Card Border Accents */
         .auth-card:first-child {
-            border-top: 4px solid #3498db;
+            border-top: 4px solid var(--primary);
         }
         
         .auth-card:last-child {
-            border-top: 4px solid #2ecc71;
+            border-top: 4px solid var(--secondary);
         }
         
         /* Form Focus Enhancement */
         .mb-3:focus-within .form-label {
-            color: #3498db;
+            color: var(--primary);
         }
         
         .auth-card:last-child .mb-3:focus-within .form-label {
-            color: #2ecc71;
+            color: var(--secondary);
         }
         
         /* Responsive Design */
@@ -374,11 +382,11 @@
         }
         
         .user-icon {
-            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
         }
         
         .admin-icon {
-            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--dark-olive) 100%);
         }
         
         /* Logo (Optional) */
@@ -390,14 +398,13 @@
         .logo-text {
             font-size: 2rem;
             font-weight: 700;
-            background: linear-gradient(135deg, #3498db 0%, #2ecc71 100%);
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
         }
     </style>
-</head>
-<body>
+
     <div class="auth-wrapper">
        
         
@@ -579,5 +586,5 @@
             });
         });
     </script>
-</body>
-</html>
+</div>
+{% endblock %}

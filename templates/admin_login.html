@@ -1,4 +1,182 @@
 {% extends "base.html" %}
 {% block content %}
-<!-- Legacy template kept for compatibility; admin login now uses login.html -->
+<style>
+    /* Rustic Color Theme Variables */
+    :root {
+        --rustic-brown: #8B4513;
+        --rustic-brown-dark: #654321;
+        --tan-beige: #D2B48C;
+        --wheat-light: #F5DEB3;
+        --olive-green: #6B8E23;
+        --dark-olive: #556B2F;
+        --primary: var(--rustic-brown);
+        --primary-dark: var(--rustic-brown-dark);
+        --secondary: var(--olive-green);
+        --dark: #3E2723;
+        --light: var(--wheat-light);
+    }
+    
+    body {
+        background: #FDF5E6;
+    }
+    
+    .admin-wrapper {
+        min-height: calc(100vh - 100px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 20px;
+        margin-top: 100px;
+        background: linear-gradient(135deg, var(--wheat-light) 0%, var(--tan-beige) 100%);
+    }
+    
+    .admin-card {
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 15px 35px rgba(139, 69, 19, 0.15);
+        padding: 3rem;
+        width: 100%;
+        max-width: 450px;
+        text-align: center;
+        border: 3px solid var(--tan-beige);
+        transition: transform 0.3s ease;
+    }
+    
+    .admin-card:hover {
+        transform: translateY(-5px);
+    }
+    
+    .admin-icon {
+        font-size: 4rem;
+        color: var(--primary);
+        margin-bottom: 1.5rem;
+        display: block;
+    }
+    
+    .admin-title {
+        color: var(--dark);
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+    }
+    
+    .admin-subtitle {
+        color: #8D6E63;
+        font-size: 0.95rem;
+        margin-bottom: 2rem;
+    }
+    
+    .form-group {
+        margin-bottom: 1.5rem;
+        text-align: left;
+    }
+    
+    .form-label {
+        color: var(--dark);
+        font-weight: 600;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 12px 16px;
+        border: 2px solid var(--tan-beige);
+        border-radius: 10px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: var(--wheat-light);
+        color: var(--dark);
+    }
+    
+    .form-control:focus {
+        outline: none;
+        border-color: var(--primary);
+        box-shadow: 0 0 0 3px rgba(139, 69, 19, 0.1);
+        background: white;
+    }
+    
+    .btn-admin {
+        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        padding: 14px 24px;
+        font-size: 1rem;
+        font-weight: 600;
+        width: 100%;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 1rem;
+        box-shadow: 0 4px 15px rgba(139, 69, 19, 0.3);
+    }
+    
+    .btn-admin:hover {
+        background: linear-gradient(135deg, var(--primary-dark) 0%, var(--dark) 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(139, 69, 19, 0.4);
+    }
+    
+    .alert {
+        padding: 12px 16px;
+        border-radius: 10px;
+        margin-bottom: 1.5rem;
+        font-weight: 500;
+    }
+    
+    .alert-danger {
+        background-color: rgba(139, 69, 19, 0.1);
+        border: 2px solid var(--primary);
+        color: var(--primary-dark);
+    }
+    
+    .back-link {
+        margin-top: 1.5rem;
+        text-align: center;
+    }
+    
+    .back-link a {
+        color: var(--secondary);
+        text-decoration: none;
+        font-weight: 600;
+        transition: color 0.3s ease;
+    }
+    
+    .back-link a:hover {
+        color: var(--dark-olive);
+        text-decoration: underline;
+    }
+</style>
+
+<div class="admin-wrapper">
+    <div class="admin-card">
+        <i class="fas fa-shield-alt admin-icon"></i>
+        <h2 class="admin-title">Admin Access</h2>
+        <p class="admin-subtitle">Secure login for authorized administrators</p>
+        
+        {% if error %}
+            <div class="alert alert-danger">{{ error }}</div>
+        {% endif %}
+        
+        <form method="POST" action="{{ url_for('admin_login') }}">
+            <div class="form-group">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" name="username" required 
+                       placeholder="Enter admin username">
+            </div>
+            
+            <div class="form-group">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password" required 
+                       placeholder="Enter your password">
+            </div>
+            
+            <button type="submit" class="btn-admin">Login as Administrator</button>
+        </form>
+        
+        <div class="back-link">
+            <a href="{{ url_for('login') }}">← Back to User Login</a>
+        </div>
+    </div>
+</div>
 {% endblock %}

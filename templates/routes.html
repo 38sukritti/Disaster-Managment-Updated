@@ -1,21 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Evacuation Routes | Disaster Relief Network</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
+{% extends "base.html" %}
+{% block content %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css" />
     <style>
-        :root {
-            --primary: #2c3e50;
-            --secondary: #e74c3c;
-            --accent: #3498db;
-            --light: #ecf0f1;
-            --dark: #2c3e50;
-            --success: #27ae60;
-            --warning: #f39c12;
-        }
+        /* Routes page specific styles with rustic colors */
         
         * {
             margin: 0;
@@ -30,12 +17,14 @@
             line-height: 1.6;
         }
         
-        header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+        .routes-header {
+            background: linear-gradient(135deg, var(--rustic-brown) 0%, var(--olive-green) 100%);
             color: white;
             padding: 30px 0;
             text-align: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(139, 69, 19, 0.2);
+            margin-top: -70px;
+            padding-top: 100px;
         }
         
         .emergency-alert {
@@ -538,7 +527,7 @@
     </style>
 </head>
 <body>
-    <header>
+    <header class="routes-header">
         <div class="container">
             <h1><i class="fas fa-map-marked-alt"></i> Evacuation Routes & Emergency Maps</h1>
             <p>Find safe routes and critical resources during emergencies in Northern India</p>
@@ -1541,5 +1530,4 @@
             stopLocationTracking();
         });
     </script>
-</body>
-</html>
+{% endblock %}

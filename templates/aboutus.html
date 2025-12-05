@@ -1,19 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Us | Disaster Relief Network</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% extends "base.html" %}
+{% block content %}
     <style>
-        :root {
-            --primary: #2c3e50;
-            --secondary: #e74c3c;
-            --accent: #3498db;
-            --light: #ecf0f1;
-            --dark: #2c3e50;
-            --success: #27ae60;
-        }
+        /* About page specific styles with rustic colors */
         
         * {
             margin: 0;
@@ -28,12 +16,14 @@
             line-height: 1.6;
         }
         
-        header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+        .about-header {
+            background: linear-gradient(135deg, var(--rustic-brown) 0%, var(--olive-green) 100%);
             color: white;
             padding: 30px 0;
             text-align: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(139, 69, 19, 0.2);
+            margin-top: -80px;
+            padding-top: 110px;
         }
         
         .container {
@@ -250,7 +240,7 @@
     </style>
 </head>
 <body>
-    <header>
+    <header class="about-header">
         <div class="container">
             <h1><i class="fas fa-users"></i> About Our Team</h1>
             <p>The passionate individuals behind Disaster Relief Network</p>
@@ -284,7 +274,7 @@
                 <div class="team-card">
                     <div class="team-image" style="background-image: url('../static/images/namya2.webp');"></div>
                     <div class="team-info">
-                        <h3 class="team-name">Namya</h3>
+                        <h3 class="team-name">Vanya</h3>
                         <div class="team-role">UX/UI Designer</div>
                         <p class="team-bio">Creates intuitive interfaces that work even in high-stress emergency situations. Focused on accessibility and user experience.</p>
                         <div class="team-social">
@@ -312,7 +302,7 @@
                 <div class="team-card">
                     <div class="team-image" style="background-image: url('../static/images/sukritti.webp');"></div>
                     <div class="team-info">
-                        <h3 class="team-name">Rishu</h3>
+                        <h3 class="team-name">Richa</h3>
                         <div class="team-role">Frontend Developer</div>
                         <p class="team-bio">Implements the interactive features that make our platform easy to use in emergencies. Focused on performance and accessibility.</p>
                         <div class="team-social">
@@ -424,5 +414,4 @@
             statsObserver.observe(statsSection);
         });
     </script>
-</body>
-</html>
+{% endblock %}

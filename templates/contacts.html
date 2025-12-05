@@ -1,20 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Emergency Contacts | Disaster Relief Network</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% extends "base.html" %}
+{% block content %}
     <style>
-        :root {
-            --primary: #2c3e50;
-            --secondary: #e74c3c;
-            --accent: #3498db;
-            --light: #ecf0f1;
-            --dark: #2c3e50;
-            --success: #27ae60;
-            --warning: #f39c12;
-        }
+        /* Contacts page specific styles with rustic colors */
         
         * {
             margin: 0;
@@ -29,22 +16,26 @@
             line-height: 1.6;
         }
         
-        header {
-            background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+        .contacts-header {
+            background: linear-gradient(135deg, var(--rustic-brown) 0%, var(--olive-green) 100%);
             color: white;
             padding: 30px 0;
             text-align: center;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 12px rgba(139, 69, 19, 0.2);
+            margin-top: -80px;
+            padding-top: 110px;
         }
         
         .emergency-alert {
-            background-color: var(--secondary);
+            background: linear-gradient(135deg, var(--rustic-brown) 0%, #A0522D 100%);
             color: white;
             padding: 15px;
             text-align: center;
             font-weight: bold;
             animation: pulse 2s infinite;
             margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(139, 69, 19, 0.3);
         }
         
         @keyframes pulse {
@@ -82,18 +73,21 @@
         }
         
         .search-btn {
-            background: var(--accent);
+            background: linear-gradient(135deg, var(--olive-green) 0%, var(--dark-olive) 100%);
             color: white;
             border: none;
             padding: 0 25px;
-            border-radius: 5px;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
             transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(107, 142, 35, 0.3);
         }
         
         .search-btn:hover {
-            background: #2980b9;
+            background: linear-gradient(135deg, var(--dark-olive) 0%, #3E4A1F 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(107, 142, 35, 0.4);
         }
         
         .filter-tags {
@@ -113,15 +107,15 @@
         }
         
         .filter-tag.active {
-            background: var(--accent);
+            background: var(--rustic-brown);
             color: white;
         }
         
-        .filter-tag.medical { border-left: 4px solid #e74c3c; }
-        .filter-tag.rescue { border-left: 4px solid #f39c12; }
-        .filter-tag.shelter { border-left: 4px solid #3498db; }
-        .filter-tag.utility { border-left: 4px solid #2ecc71; }
-        .filter-tag.govt { border-left: 4px solid #9b59b6; }
+        .filter-tag.medical { border-left: 4px solid var(--rustic-brown); }
+        .filter-tag.rescue { border-left: 4px solid #CD853F; }
+        .filter-tag.shelter { border-left: 4px solid var(--olive-green); }
+        .filter-tag.utility { border-left: 4px solid var(--dark-olive); }
+        .filter-tag.govt { border-left: 4px solid var(--tan-beige); }
         
         .quick-call {
             display: grid;
@@ -302,7 +296,7 @@
     </style>
 </head>
 <body>
-    <header>
+    <header class="contacts-header">
         <div class="container">
             <h1><i class="fas fa-phone-alt"></i> Emergency Contacts</h1>
             <p>Immediate help numbers for disaster-affected areas</p>
@@ -641,5 +635,4 @@
             });
         });
     </script>
-</body>
-</html>
+{% endblock %}

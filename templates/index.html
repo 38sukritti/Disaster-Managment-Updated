@@ -1,23 +1,17 @@
 {% extends "base.html" %}
 
 {% block content %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.body.classList.add('home-page');
+});
+</script>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="stylesheet" href="{{ url_for('static', filename='index-styles.css') }}">
 <link rel="shortcut icon" href="./images/logo.jpeg" type="image/x-icon">
 <style>
-:root {
-    --primary: #e74c3c;
-    --primary-dark: #c0392b;
-    --secondary: #3498db;
-    --secondary-dark: #2980b9;
-    --alert: #f39c12;
-    --alert-dark: #e67e22;
-    --dark: #2c3e50;
-    --light: #ecf0f1;
-    --success: #2ecc71;
-    --gray: #95a5a6;
-    --dark-gray: #7f8c8d;
-}
+/* Minimal additional styles */
 
 * {
     margin: 0;

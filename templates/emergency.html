@@ -1,19 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Emergency Preparedness - Build Your Kit</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% extends "base.html" %}
+{% block content %}
     <style>
         :root {
-            --primary: #3b82f6;
-            --primary-dark: #2563eb;
-            --danger: #ef4444;
-            --warning: #f59e0b;
-            --safe: #10b981;
-            --dark: #1e293b;
-            --light: #f8fafc;
+            /* Rustic Earthy Color Palette */
+            --rustic-brown: #8B4513;
+            --rustic-brown-dark: #654321;
+            --tan-beige: #D2B48C;
+            --wheat-light: #F5DEB3;
+            --olive-green: #6B8E23;
+            --dark-olive: #556B2F;
+            
+            /* Updated color variables */
+            --primary: var(--rustic-brown);
+            --primary-dark: var(--rustic-brown-dark);
+            --danger: #CD853F;
+            --warning: #D2B48C;
+            --safe: var(--olive-green);
+            --dark: #3E2723;
+            --light: var(--wheat-light);
             --shadow-sm: 0 1px 3px rgba(0,0,0,0.12);
             --shadow-md: 0 4px 6px rgba(0,0,0,0.1);
             --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
@@ -28,7 +32,7 @@
         }
 
         body {
-            background: #f1f5f9;
+            background: #FDF5E6;
             color: var(--dark);
             line-height: 1.6;
             -webkit-font-smoothing: antialiased;
@@ -517,5 +521,4 @@
             });
         });
     </script>
-</body>
-</html>
+{% endblock %}

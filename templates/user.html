@@ -1,19 +1,12 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Disaster Alert & Preparedness</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% extends "base.html" %}
+{% block content %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.body.classList.add('home-page');
+});
+</script>
     <style>
-        :root {
-            --primary: #2563eb;
-            --danger: #dc2626;
-            --warning: #f59e0b;
-            --safe: #10b981;
-            --dark: #1e293b;
-            --light: #f8fafc;
-        }
+        /* Emergency Alerts page specific styles with rustic colors */
         
         * {
             margin: 0;
@@ -28,14 +21,16 @@
             line-height: 1.6;
         }
         
-        header {
-            background: linear-gradient(135deg, var(--primary), #1e40af);
+        .alerts-header {
+            background: linear-gradient(135deg, var(--rustic-brown) 0%, var(--olive-green) 100%);
             color: white;
             padding: 2rem 1rem;
             text-align: center;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(139, 69, 19, 0.2);
+            margin-top: -80px;
+            padding-top: 120px;
         }
         
         .header-content {
@@ -88,7 +83,7 @@
             left: 0;
             width: 60px;
             height: 4px;
-            background-color: var(--primary);
+            background-color: var(--rustic-brown);
             border-radius: 2px;
         }
         
@@ -116,15 +111,15 @@
         }
         
         .alert-card.high {
-            border-left: 5px solid var(--danger);
+            border-left: 5px solid var(--rustic-brown);
         }
         
         .alert-card.medium {
-            border-left: 5px solid var(--warning);
+            border-left: 5px solid #CD853F;
         }
         
         .alert-card.low {
-            border-left: 5px solid var(--safe);
+            border-left: 5px solid var(--olive-green);
         }
         
         .alert-header {
@@ -376,7 +371,7 @@
     </style>
 </head>
 <body>
-    <header>
+    <header class="alerts-header">
         <div class="header-content">
             <h1>Disaster Alerts & Preparedness</h1>
             <p class="subtitle">Official Government Advisories for Public Safety</p>
@@ -723,5 +718,4 @@
         `;
         document.head.appendChild(style);
     </script>
-</body>
-</html>
+{% endblock %}

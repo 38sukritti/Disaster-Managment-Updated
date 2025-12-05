@@ -1,53 +1,77 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Edit Report</title>
-    <style>
-        body { font-family: Arial; background: #f0f2f5; padding: 30px; }
-        .form-container {
-            background: white; padding: 25px; border-radius: 10px;
-            max-width: 600px; margin: auto; box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-        }
-        label { font-weight: bold; display: block; margin-top: 15px; }
-        input, textarea, select {
-            width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #ccc;
-        }
-        button {
-            margin-top: 20px; width: 100%; padding: 10px;
-            background: #3b82f6; color: white; border: none; border-radius: 6px;
-        }
-        button:hover { background: #2563eb; }
-    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Government Report - सुरक्षासेतु</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
+    <div class="page-wrapper">
+        <div class="gov-form-container">
+            <div class="text-center mb-3">
+                <i class="fas fa-edit" style="font-size: 2.5rem; color: var(--rustic-brown); margin-bottom: 1rem;"></i>
+                <h2>Edit Disaster Report</h2>
+                <p style="color: var(--gray);">Update the disaster report information below</p>
+            </div>
 
-<div class="form-container">
-    <h2>Edit Report</h2>
+            <form method="POST">
+                <div class="gov-form-group">
+                    <label for="title">
+                        <i class="fas fa-heading"></i> Report Title
+                    </label>
+                    <input type="text" name="title" id="title" value="{{ report['title'] }}" required 
+                           placeholder="Enter a descriptive title for the disaster report">
+                </div>
 
-    <form method="POST">
-        <label>Title</label>
-        <input type="text" name="title" value="{{ report['title'] }}" required>
+                <div class="gov-form-group">
+                    <label for="severity">
+                        <i class="fas fa-exclamation-triangle"></i> Severity Level
+                    </label>
+                    <select name="severity" id="severity" required>
+                        <option value="LOW" {{ 'selected' if report['severity']=='LOW' }}>🟢 LOW - Minor Impact</option>
+                        <option value="MEDIUM" {{ 'selected' if report['severity']=='MEDIUM' }}>🟡 MEDIUM - Moderate Impact</option>
+                        <option value="HIGH" {{ 'selected' if report['severity']=='HIGH' }}>🟠 HIGH - Significant Impact</option>
+                        <option value="CRITICAL" {{ 'selected' if report['severity']=='CRITICAL' }}>🔴 CRITICAL - Severe Impact</option>
+                    </select>
+                </div>
 
-        <label>Severity</label>
-        <select name="severity">
-            <option {{ 'selected' if report['severity']=='LOW' }}>LOW</option>
-            <option {{ 'selected' if report['severity']=='MEDIUM' }}>MEDIUM</option>
-            <option {{ 'selected' if report['severity']=='HIGH' }}>HIGH</option>
-            <option {{ 'selected' if report['severity']=='CRITICAL' }}>CRITICAL</option>
-        </select>
+                <div class="gov-form-group">
+                    <label for="affected_areas">
+                        <i class="fas fa-map-marker-alt"></i> Affected Areas
+                    </label>
+                    <textarea name="affected_areas" id="affected_areas" required 
+                              placeholder="List the specific areas, districts, or regions affected by this disaster...">{{ report['affected_areas'] }}</textarea>
+                </div>
 
-        <label>Affected Areas</label>
-        <textarea name="affected_areas" required>{{ report['affected_areas'] }}</textarea>
+                <div class="gov-form-group">
+                    <label for="timeframe">
+                        <i class="fas fa-calendar-alt"></i> Timeframe
+                    </label>
+                    <input type="text" name="timeframe" id="timeframe" value="{{ report.get('timeframe', '') }}" 
+                           placeholder="e.g., Ongoing, 24-48 hours, Next 7 days">
+                </div>
 
-        <label>Timeframe</label>
-        <input type="text" name="timeframe" value="{{ report['timeframe'] }}">
+                <div class="gov-form-group">
+                    <label for="advisory">
+                        <i class="fas fa-bullhorn"></i> Public Advisory
+                    </label>
+                    <textarea name="advisory" id="advisory" required 
+                              placeholder="Provide safety instructions, evacuation notices, or other important information for the public...">{{ report['advisory'] }}</textarea>
+                </div>
 
-        <label>Advisory</label>
-        <textarea name="advisory" required>{{ report['advisory'] }}</textarea>
-
-        <button type="submit">Save Changes</button>
-    </form>
-</div>
-
+                <div style="display: flex; gap: 1rem; margin-top: 2rem;">
+                    <button type="submit" class="btn-gov-primary" style="flex: 1;">
+                        <i class="fas fa-save"></i> Save Changes
+                    </button>
+                    <a href="{{ url_for('gov_reports') }}" class="btn-gov-success" style="flex: 1; text-align: center; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-arrow-left"></i> Back to Reports
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
 </body>
 </html>

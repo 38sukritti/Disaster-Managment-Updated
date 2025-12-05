@@ -1,19 +1,7 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Help Us Rebuild - Disaster Relief Fund</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+{% extends "base.html" %}
+{% block content %}
     <style>
-        :root {
-            --primary: #2c3e50;
-            --secondary: #e74c3c;
-            --accent: #3498db;
-            --light: #ecf0f1;
-            --dark: #2c3e50;
-            --success: #27ae60;
-        }
+        /* Donation page specific styles with rustic colors */
         
         * {
             margin: 0;
@@ -29,7 +17,7 @@
         }
         
         .hero {
-            background: linear-gradient(135deg, rgba(44, 62, 80, 0.9) 0%, rgba(52, 152, 219, 0.8) 100%), url('https://images.unsplash.com/photo-1584036561566-baf8f5f1b144?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
+            background: linear-gradient(135deg, rgba(139, 69, 19, 0.9) 0%, rgba(107, 142, 35, 0.8) 100%), url('https://images.unsplash.com/photo-1584036561566-baf8f5f1b144?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center/cover;
             height: 60vh;
             display: flex;
             flex-direction: column;
@@ -40,6 +28,8 @@
             padding: 0 20px;
             position: relative;
             overflow: hidden;
+            margin-top: -70px;
+            padding-top: 140px;
         }
         
         .hero::after {
@@ -730,5 +720,4 @@
             }
         });
     </script>
-</body>
-</html>
+{% endblock %}

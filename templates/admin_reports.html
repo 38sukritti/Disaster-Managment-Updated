@@ -1,10 +1,32 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Manage Reports - Admin</title>
-    <style>
-        body { font-family: Arial; background: #f1f5f9; padding: 40px; }
-        h2 { text-align: center; color: #1e293b; }
+{% extends "base.html" %}
+{% block content %}
+<style>
+    :root {
+        --rustic-brown: #8B4513;
+        --rustic-brown-dark: #654321;
+        --tan-beige: #D2B48C;
+        --wheat-light: #F5DEB3;
+        --olive-green: #6B8E23;
+        --dark-olive: #556B2F;
+        --primary: var(--rustic-brown);
+        --primary-dark: var(--rustic-brown-dark);
+        --secondary: var(--olive-green);
+        --dark: #3E2723;
+        --light: var(--wheat-light);
+    }
+    
+    body { 
+        font-family: 'Poppins', sans-serif; 
+        background: #FDF5E6; 
+        padding: 40px 20px;
+        padding-top: 120px;
+    }
+    
+    h2 { 
+        text-align: center; 
+        color: var(--dark);
+        margin-bottom: 2rem;
+    }
 
         table {
             width: 100%;
@@ -20,23 +42,40 @@
             border-bottom: 1px solid #e2e8f0;
         }
 
-        th { background: #1e293b; color: white; }
-        tr:hover { background: #f8fafc; }
+        th { 
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white; 
+        }
+        
+        tr:hover { background: var(--wheat-light); }
 
         .btn-edit {
             padding: 6px 12px;
-            background: #3b82f6;
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--dark-olive) 100%);
             color: white;
             border-radius: 6px;
             text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-edit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(107, 142, 35, 0.3);
         }
 
         .btn-delete {
             padding: 6px 12px;
-            background: #dc2626;
+            background: linear-gradient(135deg, #CD853F 0%, #A0522D 100%);
             color: white;
             border-radius: 6px;
             border: none;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        
+        .btn-delete:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(205, 133, 63, 0.3);
         }
 
         .top-bar {
@@ -47,15 +86,21 @@
 
         .back-btn {
             padding: 8px 14px;
-            background: gray;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
             color: white;
             border-radius: 6px;
             text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 8px rgba(139, 69, 19, 0.2);
+        }
+        
+        .back-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(139, 69, 19, 0.3);
+            color: white;
+            text-decoration: none;
         }
     </style>
-</head>
-
-<body>
 
 <div class="top-bar">
     <a class="back-btn" href="/admin/dashboard">← Back to Dashboard</a>
@@ -94,5 +139,4 @@
     {% endfor %}
 </table>
 
-</body>
-</html>
+{% endblock %}
