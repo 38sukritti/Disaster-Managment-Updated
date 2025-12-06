@@ -39,5 +39,14 @@
             Submit Disaster Report
         </button>
     </form>
+    
+    <div style="text-align: center; margin-top: 2rem;">
+        <a href="{{ url_for('gov_reports') }}" style="display: inline-block; padding: 0.8rem 1.5rem; background: #27ae60; color: white; text-decoration: none; border-radius: 5px; font-weight: bold; margin-right: 1rem;">
+            <i class="fas fa-list"></i> Manage Disasters
+        </a>
+        <a href="{{ url_for('home') }}" style="display: inline-block; padding: 0.8rem 1.5rem; background: #3498db; color: white; text-decoration: none; border-radius: 5px; font-weight: bold;">
+            <i class="fas fa-home"></i> Back to Home
+        </a>
+    </div>
 </div>
 {% endblock %}

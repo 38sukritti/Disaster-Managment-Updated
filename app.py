@@ -1473,6 +1473,48 @@ def rumor_check():
             error=str(e)
         )
         return jsonify(response.dict()), 500
+
+@app.route('/api/disaster-reports', methods=['GET'])
+def get_disaster_reports():
+    """API endpoint to fetch disaster reports for the live dashboard map"""
+    try:
+        with get_db() as conn:
+            reports = conn.execute("""
+                SELECT id, title, severity, affected_areas, timeframe, advisory, 
+                       reported_by, created_at
+                FROM disaster_reports 
+                ORDER BY created_at DESC
+                LIMIT 50
+            """).fetchall()
+            
+        # Convert to list of dictionaries for JSON response
+        disaster_data = []
+        for report in reports:
+            disaster_data.append({
+                'id': report['id'],
+                'title': report['title'],
+                'severity': report['severity'],
+                'affected_areas': report['affected_areas'],
+                'timeframe': report['timeframe'],
+                'advisory': report['advisory'],
+                'reported_by': report['reported_by'],
+                'created_at': report['created_at']
+            })
+            
+        return jsonify({
+            'success': True,
+            'disasters': disaster_data,
+            'count': len(disaster_data)
+        })
+        
+    except Exception as e:
+        print(f"Error fetching disaster reports: {e}")
+        return jsonify({
+            'success': False,
+            'error': 'Failed to fetch disaster reports',
+            'disasters': [],
+            'count': 0
+        }), 500
 @app.route('/')
 def home():
     return render_template('index.html')

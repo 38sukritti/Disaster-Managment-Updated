@@ -22,8 +22,9 @@ document.addEventListener('DOMContentLoaded', function() {
 body {
     font-family: 'Poppins', sans-serif;
     line-height: 1.6;
-    color: #333;
-    background-color: #f9f9f9;
+    color: var(--dark);
+    background-color: var(--background);
+    padding-top: 0; /* Remove any conflicting padding - navbar handles this */
 }
 
 h1, h2, h3, h4 {
@@ -131,77 +132,9 @@ img {
     color: white;
 }
 
-/* Header Styles */
-.header {
-    background-color: white;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    position: fixed;
-    width: 100%;
-    top: 0;
-    z-index: 1000;
-}
+/* Header styles are now handled by navbar-simplified.css - removed conflicting styles */
 
-.header .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 0;
-}
-
-.logo {
-    display: flex;
-    align-items: center;
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: var(--dark);
-}
-
-.logo i {
-    margin-right: 0.5rem;
-    color: var(--primary);
-}
-
-.nav ul {
-    display: flex;
-}
-
-.nav ul li {
-    margin-left: 2rem;
-}
-
-.nav ul li a {
-    color: var(--dark);
-    font-weight: 500;
-    transition: color 0.3s;
-}
-
-.nav ul li a:hover {
-    color: var(--primary);
-}
-
-/* Navigation SOS Button */
-.sos-nav-button {
-    background-color: #dc2626;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    padding: 0.5rem 1rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.sos-nav-button:hover {
-    background-color: #b91c1c;
-    transform: translateY(-1px);
-}
-
-.sos-nav-button:active {
-    transform: translateY(0);
-}
+/* SOS button styles are now handled by navbar-simplified.css - removed conflicting styles */
 /* SOS Button Styles */
 #sosButton {
     background-color: #dc2626;
@@ -244,23 +177,7 @@ img {
     background-color: #ef4444 !important;
     box-shadow: 0 4px 6px rgba(239, 68, 68, 0.3) !important;
 }
-/* Mobile responsiveness */
-@media (max-width: 768px) {
-    .sos-nav-button {
-        padding: 0.5rem;
-        font-size: 0;
-    }
-    
-    .sos-nav-button i {
-        font-size: 1rem;
-    }
-}
-
-.mobile-menu {
-    display: none;
-    font-size: 1.5rem;
-    cursor: pointer;
-}
+/* Mobile menu styles are now handled by navbar-simplified.css - removed conflicting styles */
 
 /* Hero Section */
 .hero {
@@ -269,7 +186,7 @@ img {
     position: relative;
     display: flex;
     align-items: center;
-    margin-top: 70px;
+    margin-top: 60px; /* Match navbar height from navbar-simplified.css */
 }
 
 .hero-background {
@@ -997,120 +914,7 @@ img {
     width: 100%;
     z-index: 1;
 }
-.profile-menu {
-    position: relative;
-}
-
-.profile-circle {
-    width: 35px;
-    height: 35px;
-    border-radius: 50%;
-    background: #dc2626;
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    font-weight: bold;
-    font-size: 14px;
-}
-
-/* Dropdown stays open on hover of circle OR dropdown */
-.profile-menu:hover .dropdown-menu,
-.profile-menu:focus-within .dropdown-menu {
-    display: block;
-}
-
-.dropdown-menu {
-    position: absolute;
-    top: 42px;                 /* exactly below circle */
-    left: 50%;                /* center align */
-    transform: translateX(-50%);
-    background: white;
-    padding: 6px 14px;        /* Fitted to "Logout" text */
-    border-radius: 6px;
-    border: 1px solid #e5e5e5;
-    white-space: nowrap;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-    display: none;
-    z-index: 999;
-}
-
-.dropdown-menu a {
-    text-decoration: none;
-    color: #333;
-    font-size: 14px;
-}
-.profile-wrapper {
-    position: relative;
-    display: inline-block;
-}
-
-.initials {
-    width: 40px;
-    height: 40px;
-    background: #dc2626;;
-    border-radius: 50%;
-    color: white;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-weight: bold;
-    cursor: pointer;
-}
-
-
-
-/* Dropdown container */
-.dropdown {
-    position: absolute;
-    top: 50px;
-    right: 0;
-    background: #ffffff;
-    border-radius: 8px;
-    padding: 8px 0;
-    min-width: 140px;
-    box-shadow: 0 4px 14px rgba(0,0,0,0.15);
-    border: 1px solid #e5e7eb;
-    z-index: 20;
-    transition: opacity 0.2s ease, transform 0.2s ease;
-}
-
-/* Hidden class */
-.hidden {
-    display: none;
-}
-
-/* Logout button style */
-#logout-btn {
-    width: 100%;
-    padding: 10px 16px;
-    text-align: left;
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 15px;
-    outline: none;
-}
-
-/* Anchor inside the button */
-#logout-btn a {
-    color: #374151; /* gray-700 */
-    text-decoration: none;
-    display: block;
-    width: 100%;
-    font-weight: 500;
-}
-
-/* Hover effect */
-#logout-btn:hover {
-    background: #f3f4f6; /* light gray */
-}
-
-/* Hover effect for text */
-#logout-btn:hover a {
-    color: #1f2937; /* darker text */
-}
+/* Profile menu styles are now handled by navbar-simplified.css - removed conflicting styles */
 
 /* --- Rumor Verifier UI --- */
 .rumor-verify {
@@ -1307,14 +1111,6 @@ img {
         <div class="dashboard-container">
             <!-- Interactive Map Container -->
             <div class="map-container">
-                <div class="map-controls">
-                    <button class="control-btn active" data-layer="all">All Threats</button>
-                    <button class="control-btn" data-layer="earthquake">Earthquakes</button>
-                    <button class="control-btn" data-layer="flood">Floods</button>
-                    <button class="control-btn" data-layer="wildfire">Wildfires</button>
-                    <button class="control-btn" data-layer="hurricane">Hurricanes</button>
-                </div>
-                
                 <!-- Map Div (must have defined height) -->
                 <div id="disasterMap"></div>
                 
@@ -1537,13 +1333,7 @@ img {
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Mobile Menu Toggle
-    const mobileMenuBtn = document.querySelector('.mobile-menu');
-    const nav = document.querySelector('.nav ul');
-    
-    mobileMenuBtn.addEventListener('click', function() {
-        nav.style.display = nav.style.display === 'block' ? 'none' : 'block';
-    });
+    // Mobile menu is handled by navbar-mobile.js - removed conflicting code
 
     // Animate stats counters
     const animateCounters = () => {
@@ -1600,49 +1390,344 @@ document.addEventListener('DOMContentLoaded', function() {
             iconSize: [30, 30]
         });
         
-        // Add markers for Northern India locations
-        // Delhi - Flood
-        L.marker([28.6139, 77.2090], { icon: floodIcon })
-            .addTo(map)
-            .bindPopup("<b>Flood Warning</b><br>Yamuna River overflow reported in Delhi. Evacuation orders for low-lying areas.");
+        // Store markers for layer control
+        window.disasterMarkers = [];
         
-        // Shimla - Earthquake
-        L.marker([31.1048, 77.1734], { icon: earthquakeIcon })
-            .addTo(map)
-            .bindPopup("<b>Earthquake Alert</b><br>Magnitude 4.8 near Shimla. Minor damage reported.");
+        // Function to get disaster icon based on type
+        const getDisasterIcon = (title) => {
+            const titleLower = title.toLowerCase();
+            if (titleLower.includes('earthquake') || titleLower.includes('seismic')) {
+                return earthquakeIcon;
+            } else if (titleLower.includes('flood') || titleLower.includes('water')) {
+                return floodIcon;
+            } else if (titleLower.includes('fire') || titleLower.includes('wildfire')) {
+                return wildfireIcon;
+            } else if (titleLower.includes('hurricane') || titleLower.includes('cyclone') || titleLower.includes('storm')) {
+                return hurricaneIcon;
+            } else if (titleLower.includes('heat')) {
+                return L.divIcon({html: '🌡️', iconSize: [30, 30], className: 'disaster-icon'});
+            } else if (titleLower.includes('landslide')) {
+                return L.divIcon({html: '⛰️', iconSize: [30, 30], className: 'disaster-icon'});
+            } else if (titleLower.includes('drought')) {
+                return L.divIcon({html: '🏜️', iconSize: [30, 30], className: 'disaster-icon'});
+            } else if (titleLower.includes('tsunami')) {
+                return L.divIcon({html: '🌊', iconSize: [30, 30], className: 'disaster-icon'});
+            } else if (titleLower.includes('tornado')) {
+                return L.divIcon({html: '🌪️', iconSize: [30, 30], className: 'disaster-icon'});
+            } else if (titleLower.includes('avalanche')) {
+                return L.divIcon({html: '❄️', iconSize: [30, 30], className: 'disaster-icon'});
+            } else if (titleLower.includes('volcanic') || titleLower.includes('volcano')) {
+                return L.divIcon({html: '🌋', iconSize: [30, 30], className: 'disaster-icon'});
+            } else {
+                return L.divIcon({html: '⚠️', iconSize: [30, 30], className: 'disaster-icon'});
+            }
+        };
         
-        // Chandigarh - Wildfire
-        L.marker([30.7333, 76.7794], { icon: wildfireIcon })
-            .addTo(map)
-            .bindPopup("<b>Wildfire Alert</b><br>Forest fires reported in Shivalik Hills near Chandigarh.");
+        // Function to get coordinates from location name (simplified geocoding)
+        const getLocationCoordinates = (location) => {
+            const locationLower = location.toLowerCase();
+            const locationMap = {
+                'delhi': [28.6139, 77.2090],
+                'mumbai': [19.0760, 72.8777],
+                'bangalore': [12.9716, 77.5946],
+                'chennai': [13.0827, 80.2707],
+                'kolkata': [22.5726, 88.3639],
+                'hyderabad': [17.3850, 78.4867],
+                'pune': [18.5204, 73.8567],
+                'ahmedabad': [23.0225, 72.5714],
+                'jaipur': [26.9124, 75.7873],
+                'lucknow': [26.8467, 80.9462],
+                'kanpur': [26.4499, 80.3319],
+                'nagpur': [21.1458, 79.0882],
+                'indore': [22.7196, 75.8577],
+                'thane': [19.2183, 72.9781],
+                'bhopal': [23.2599, 77.4126],
+                'visakhapatnam': [17.6868, 83.2185],
+                'pimpri': [18.6298, 73.7997],
+                'patna': [25.5941, 85.1376],
+                'vadodara': [22.3072, 73.1812],
+                'ghaziabad': [28.6692, 77.4538],
+                'ludhiana': [30.9010, 75.8573],
+                'agra': [27.1767, 78.0081],
+                'nashik': [19.9975, 73.7898],
+                'faridabad': [28.4089, 77.3178],
+                'meerut': [28.9845, 77.7064],
+                'rajkot': [22.3039, 70.8022],
+                'kalyan': [19.2437, 73.1355],
+                'vasai': [19.4912, 72.8054],
+                'varanasi': [25.3176, 82.9739],
+                'srinagar': [34.0837, 74.7973],
+                'aurangabad': [19.8762, 75.3433],
+                'dhanbad': [23.7957, 86.4304],
+                'amritsar': [31.6340, 74.8723],
+                'navi mumbai': [19.0330, 73.0297],
+                'allahabad': [25.4358, 81.8463],
+                'ranchi': [23.3441, 85.3096],
+                'howrah': [22.5958, 88.2636],
+                'coimbatore': [11.0168, 76.9558],
+                'jabalpur': [23.1815, 79.9864],
+                'gwalior': [26.2183, 78.1828],
+                'vijayawada': [16.5062, 80.6480],
+                'jodhpur': [26.2389, 73.0243],
+                'madurai': [9.9252, 78.1198],
+                'raipur': [21.2514, 81.6296],
+                'kota': [25.2138, 75.8648],
+                'chandigarh': [30.7333, 76.7794],
+                'guwahati': [26.1445, 91.7362],
+                'solapur': [17.6599, 75.9064],
+                'hubli': [15.3647, 75.1240],
+                'tiruchirappalli': [10.7905, 78.7047],
+                'bareilly': [28.3670, 79.4304],
+                'mysore': [12.2958, 76.6394],
+                'tiruppur': [11.1085, 77.3411],
+                'gurgaon': [28.4595, 77.0266],
+                'aligarh': [27.8974, 78.0880],
+                'jalandhar': [31.3260, 75.5762],
+                'bhubaneswar': [20.2961, 85.8245],
+                'salem': [11.6643, 78.1460],
+                'warangal': [17.9689, 79.5941],
+                'mira': [19.2952, 72.8694],
+                'thiruvananthapuram': [8.5241, 76.9366],
+                'bhiwandi': [19.3002, 73.0635],
+                'saharanpur': [29.9680, 77.5552],
+                'guntur': [16.3067, 80.4365],
+                'amravati': [20.9374, 77.7796],
+                'bikaner': [28.0229, 73.3119],
+                'noida': [28.5355, 77.3910],
+                'jamshedpur': [22.8046, 86.2029],
+                'bhilai nagar': [21.1938, 81.3509],
+                'cuttack': [20.4625, 85.8828],
+                'firozabad': [27.1592, 78.3957],
+                'kochi': [9.9312, 76.2673],
+                'bhavnagar': [21.7645, 72.1519],
+                'dehradun': [30.3165, 78.0322],
+                'durgapur': [23.4800, 87.3119],
+                'asansol': [23.6739, 86.9524],
+                'nanded': [19.1383, 77.2975],
+                'kolhapur': [16.7050, 74.2433],
+                'ajmer': [26.4499, 74.6399],
+                'gulbarga': [17.3297, 76.8343],
+                'jamnagar': [22.4707, 70.0577],
+                'ujjain': [23.1765, 75.7885],
+                'loni': [28.7333, 77.2833],
+                'siliguri': [26.7271, 88.3953],
+                'jhansi': [25.4484, 78.5685],
+                'ulhasnagar': [19.2215, 73.1645],
+                'nellore': [14.4426, 79.9865],
+                'jammu': [32.7266, 74.8570],
+                'sangli': [16.8524, 74.5815],
+                'belgaum': [15.8497, 74.4977],
+                'mangalore': [12.9141, 74.8560],
+                'ambattur': [13.1143, 80.1548],
+                'tirunelveli': [8.7139, 77.7567],
+                'malegaon': [20.5579, 74.5287],
+                'gaya': [24.7914, 85.0002],
+                'jalgaon': [21.0077, 75.5626],
+                'udaipur': [24.5854, 73.7125],
+                'maheshtala': [22.4978, 88.2489],
+                'rajpura': [30.4781, 76.5946],
+                'shimla': [31.1048, 77.1734]
+            };
+            
+            // Try exact match first
+            for (const [city, coords] of Object.entries(locationMap)) {
+                if (locationLower.includes(city)) {
+                    return coords;
+                }
+            }
+            
+            // Default to Delhi if no match found
+            return [28.6139, 77.2090];
+        };
         
-        // Jaipur - Heatwave
-        L.marker([26.9124, 75.7873], { icon: L.divIcon({html: '🌡️', iconSize: [30, 30]}) })
-            .addTo(map)
-            .bindPopup("<b>Heatwave Warning</b><br>Extreme temperatures in Rajasthan. Stay hydrated and avoid sun exposure.");
+        // Function to load disaster reports from API
+        const loadDisasterReports = async () => {
+            try {
+                const response = await fetch('/api/disaster-reports');
+                const data = await response.json();
+                
+                if (data.success && data.disasters) {
+                    // Clear existing markers
+                    window.disasterMarkers.forEach(marker => map.removeLayer(marker));
+                    window.disasterMarkers = [];
+                    
+                    // Group disasters by location
+                    const locationGroups = {};
+                    data.disasters.forEach(disaster => {
+                        const coords = getLocationCoordinates(disaster.affected_areas);
+                        const key = `${coords[0]},${coords[1]}`;
+                        
+                        if (!locationGroups[key]) {
+                            locationGroups[key] = {
+                                coords: coords,
+                                disasters: []
+                            };
+                        }
+                        locationGroups[key].disasters.push(disaster);
+                    });
+                    
+                    // Create markers for each location group
+                    Object.values(locationGroups).forEach(group => {
+                        if (group.disasters.length === 1) {
+                            // Single disaster - use normal icon
+                            const disaster = group.disasters[0];
+                            const icon = getDisasterIcon(disaster.title);
+                            
+                            const marker = L.marker(group.coords, { icon: icon })
+                                .addTo(map)
+                                .bindPopup(createSingleDisasterPopup(disaster));
+                            
+                            marker.disasterType = getDisasterType(disaster.title);
+                            window.disasterMarkers.push(marker);
+                        } else {
+                            // Multiple disasters - use cluster marker with count
+                            const clusterIcon = L.divIcon({
+                                html: `<div style="background: #d32f2f; color: white; border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; border: 2px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.3);">${group.disasters.length}</div>`,
+                                iconSize: [35, 35],
+                                className: 'cluster-icon'
+                            });
+                            
+                            const marker = L.marker(group.coords, { icon: clusterIcon })
+                                .addTo(map)
+                                .bindPopup(createClusterPopup(group.disasters));
+                            
+                            marker.disasterType = 'cluster';
+                            window.disasterMarkers.push(marker);
+                        }
+                    });
+                    
+                    // Update stats
+                    document.getElementById('activeDisasters').textContent = data.disasters.length;
+                    console.log(`Loaded ${data.disasters.length} disaster reports on map`);
+                } else {
+                    console.error('Failed to load disaster reports:', data.error);
+                }
+            } catch (error) {
+                console.error('Error loading disaster reports:', error);
+            }
+        };
         
-        // Amritsar - Civil Unrest
-        L.marker([31.6340, 74.8723], { icon: L.divIcon({html: '⚠️', iconSize: [30, 30]}) })
-            .addTo(map)
-            .bindPopup("<b>Civil Unrest</b><br>Protests reported in Amritsar. Avoid affected areas.");
+        // Function to create popup for single disaster
+        const createSingleDisasterPopup = (disaster) => {
+            return `
+                <div style="max-width: 300px; max-height: 350px; overflow-y: auto;">
+                    <h4 style="margin: 0 0 10px 0; color: #d32f2f;">${disaster.title}</h4>
+                    <p style="margin: 5px 0;"><strong>Severity:</strong> <span style="color: ${disaster.severity === 'HIGH' ? '#d32f2f' : disaster.severity === 'MEDIUM' ? '#f57c00' : '#388e3c'}">${disaster.severity}</span></p>
+                    <p style="margin: 5px 0;"><strong>Location:</strong> ${disaster.affected_areas}</p>
+                    <p style="margin: 5px 0;"><strong>Timeframe:</strong> ${disaster.timeframe || 'Ongoing'}</p>
+                    <p style="margin: 5px 0;"><strong>Advisory:</strong> ${disaster.advisory}</p>
+                    <p style="margin: 5px 0; font-size: 12px; color: #666;"><strong>Reported by:</strong> ${disaster.reported_by}</p>
+                    <p style="margin: 5px 0; font-size: 12px; color: #666;"><strong>Reported:</strong> ${new Date(disaster.created_at).toLocaleString()}</p>
+                </div>
+            `;
+        };
         
-        // Dehradun - Landslide
-        L.marker([30.3165, 78.0322], { icon: L.divIcon({html: '⛰️', iconSize: [30, 30]}) })
-            .addTo(map)
-            .bindPopup("<b>Landslide Warning</b><br>Heavy rains triggering landslides in Uttarakhand.");
+        // Function to create popup for clustered disasters
+        const createClusterPopup = (disasters) => {
+            let popupContent = `<div style="max-width: 350px; max-height: 400px; overflow-y: auto;"><h4 style="margin: 0 0 15px 0; color: #d32f2f; position: sticky; top: 0; background: white; padding-bottom: 10px; border-bottom: 2px solid #d32f2f;">${disasters.length} Active Disasters</h4>`;
+            
+            disasters.forEach((disaster, index) => {
+                const icon = getDisasterTypeIcon(disaster.title);
+                popupContent += `
+                    <div style="border-bottom: 1px solid #eee; padding: 10px 0; ${index === disasters.length - 1 ? 'border-bottom: none;' : ''}">
+                        <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                            <span style="margin-right: 8px; font-size: 18px;">${icon}</span>
+                            <strong style="color: #d32f2f;">${disaster.title}</strong>
+                        </div>
+                        <p style="margin: 3px 0; font-size: 13px;"><strong>Severity:</strong> <span style="color: ${disaster.severity === 'HIGH' ? '#d32f2f' : disaster.severity === 'MEDIUM' ? '#f57c00' : '#388e3c'}">${disaster.severity}</span></p>
+                        <p style="margin: 3px 0; font-size: 13px;"><strong>Advisory:</strong> ${disaster.advisory.substring(0, 80)}${disaster.advisory.length > 80 ? '...' : ''}</p>
+                        <p style="margin: 3px 0; font-size: 11px; color: #666;">${new Date(disaster.created_at).toLocaleString()}</p>
+                    </div>
+                `;
+            });
+            
+            popupContent += '</div>';
+            return popupContent;
+        };
         
-        // Add layer control functionality
+        // Function to get disaster type icon (emoji)
+        const getDisasterTypeIcon = (title) => {
+            const titleLower = title.toLowerCase();
+            if (titleLower.includes('earthquake') || titleLower.includes('seismic')) return '🌋';
+            if (titleLower.includes('flood') || titleLower.includes('water')) return '🌊';
+            if (titleLower.includes('fire') || titleLower.includes('wildfire')) return '🔥';
+            if (titleLower.includes('hurricane') || titleLower.includes('cyclone') || titleLower.includes('storm')) return '🌀';
+            if (titleLower.includes('heat')) return '🌡️';
+            if (titleLower.includes('landslide')) return '⛰️';
+            if (titleLower.includes('drought')) return '🏜️';
+            if (titleLower.includes('tsunami')) return '🌊';
+            if (titleLower.includes('tornado')) return '🌪️';
+            if (titleLower.includes('avalanche')) return '❄️';
+            if (titleLower.includes('volcanic') || titleLower.includes('volcano')) return '🌋';
+            return '⚠️';
+        };
+        
+        // Function to get disaster type for filtering
+        const getDisasterType = (title) => {
+            const titleLower = title.toLowerCase();
+            if (titleLower.includes('earthquake') || titleLower.includes('seismic')) {
+                return 'earthquake';
+            } else if (titleLower.includes('flood') || titleLower.includes('water')) {
+                return 'flood';
+            } else if (titleLower.includes('fire') || titleLower.includes('wildfire')) {
+                return 'wildfire';
+            } else if (titleLower.includes('hurricane') || titleLower.includes('cyclone') || titleLower.includes('storm')) {
+                return 'hurricane';
+            } else {
+                return 'other';
+            }
+        };
+        
+        // Load disaster reports on map initialization
+        loadDisasterReports();
+        
+        // Add layer control functionality with actual filtering
         document.querySelectorAll('.control-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 document.querySelectorAll('.control-btn').forEach(b => b.classList.remove('active'));
                 this.classList.add('active');
-                // Here you would implement actual layer filtering logic
-                console.log('Showing layer:', this.dataset.layer);
+                
+                const selectedLayer = this.dataset.layer;
+                
+                // Show/hide markers based on selected layer
+                window.disasterMarkers.forEach(marker => {
+                    if (selectedLayer === 'all' || marker.disasterType === selectedLayer || marker.disasterType === 'cluster') {
+                        map.addLayer(marker);
+                    } else {
+                        map.removeLayer(marker);
+                    }
+                });
+                
+                console.log('Showing layer:', selectedLayer);
             });
         });
         
+        // Add refresh functionality
+        const refreshBtn = document.getElementById('refreshBtn');
+        if (refreshBtn) {
+            refreshBtn.addEventListener('click', function() {
+                this.innerHTML = '⟳ Refreshing...';
+                this.disabled = true;
+                
+                loadDisasterReports().then(() => {
+                    this.innerHTML = '⟳ Refresh';
+                    this.disabled = false;
+                    document.getElementById('lastUpdated').textContent = new Date().toLocaleTimeString();
+                }).catch(() => {
+                    this.innerHTML = '⟳ Refresh';
+                    this.disabled = false;
+                });
+            });
+        }
+        
         // Update last updated time
         document.getElementById('lastUpdated').textContent = new Date().toLocaleTimeString();
+        
+        // Auto-refresh disaster reports every 5 minutes
+        setInterval(() => {
+            loadDisasterReports();
+            document.getElementById('lastUpdated').textContent = new Date().toLocaleTimeString();
+        }, 300000); // 5 minutes
     };
 
 
@@ -1956,18 +2041,6 @@ initRumorVerifier();
     observer.observe(document.querySelector('.dashboard'));
 });
 
-const initials = document.getElementById("profile-initials");
-const dropdown = document.getElementById("dropdown");
-
-initials.addEventListener("click", () => {
-    dropdown.classList.toggle("hidden");
-});
-
-// Close dropdown when clicking outside
-document.addEventListener("click", (e) => {
-    if (!initials.contains(e.target) && !dropdown.contains(e.target)) {
-        dropdown.classList.add("hidden");
-    }
-});
+// Profile dropdown is handled by navbar-mobile.js - removed conflicting code
 </script>
 {% endblock %}

@@ -50,7 +50,7 @@
                     <label for="timeframe">
                         <i class="fas fa-calendar-alt"></i> Timeframe
                     </label>
-                    <input type="text" name="timeframe" id="timeframe" value="{{ report.get('timeframe', '') }}" 
+                    <input type="text" name="timeframe" id="timeframe" value="{{ report['timeframe'] if report['timeframe'] else '' }}" 
                            placeholder="e.g., Ongoing, 24-48 hours, Next 7 days">
                 </div>
 
